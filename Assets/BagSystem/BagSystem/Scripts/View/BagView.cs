@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Game.Bag.Controller;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,5 +23,78 @@ namespace Game.Bag.View
         public RectTransform backgroundRoot;           // 背景格子父节点（在层级上位于 slotsRoot 之前）
         [Tooltip("背景格子预制体（仅视觉，不拦截射线）")]
         public GameObject backgroundPrefab;            // 背景格子预制（仅视觉）
+
+        #region Public Methods
+
+        public List<BagSlotView> CreateSlots(int count, BagController controller)
+        {
+            List<BagSlotView> _slots = new List<BagSlotView>();
+
+            if (slotPrefab == null || slotsRoot == null || backgroundRoot == null || backgroundPrefab == null)
+            {
+                Debug.LogError("BagView.CreateSlots：缺少必要的预制体或容器引用，无法创建槽位。");
+                return _slots;
+            }
+
+            // 清空旧的
+            foreach (Transform child in slotsRoot)
+            {
+                Destroy(child.gameObject);
+            }
+
+            // 创建新的
+            for (int i = 0; i < count; i++)
+            {
+                // 槽位
+                var slotObj = Instantiate(slotPrefab, slotsRoot);
+                slotObj.name = $"Slot_{i}";
+                var slotView = slotObj.GetComponent<BagSlotView>();
+                if (slotView != null)
+                {
+                    slotView.Bind(i, controller);
+                    slotView.SetCount(0); // 初始数量为0
+                    _slots.Add(slotView);
+                }
+            }
+
+            return _slots;
+        }
+
+        public List<GameObject> CreateBackgrounds(int count)
+        {
+            Debug.Log($"BagView：创建 {count} 个背景格子。");
+            List<GameObject> _backgrounds = new List<GameObject>();
+
+            if (backgroundRoot == null || backgroundPrefab == null)
+            {
+                Debug.LogError("BagView.CreateBackgrounds：缺少必要的预制体或容器引用，无法创建背景格子。");
+                return _backgrounds;
+            }
+
+            // 清空旧的
+            foreach (Transform child in backgroundRoot)
+            {
+                Destroy(child.gameObject);
+            }
+
+            // 创建新的
+            for (int i = 0; i < count; i++)
+            {
+                var bgObj = Instantiate(backgroundPrefab, backgroundRoot);
+                bgObj.name = $"Background_{i}";
+                _backgrounds.Add(bgObj);
+
+                Image image = bgObj.GetComponent<Image>();
+                if (image != null)
+                {
+                    image.raycastTarget = false; // 背景不拦截射线
+                }
+            }
+
+            return _backgrounds;
+        }
+
+        #endregion
+
     }
 }

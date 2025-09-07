@@ -46,7 +46,7 @@ namespace Game.Bag.Controller
         /// <summary>
         /// 槽位边界（SlotsRoot 的父节点）。
         /// </summary>
-        public RectTransform SlotsBoundary => view != null && view.slotsRoot != null ? view.slotsRoot.parent as RectTransform : null;
+        public RectTransform SlotsBoundary => bagView != null && bagView.slotsRoot != null ? bagView.slotsRoot.parent as RectTransform : null;
         #endregion
 
         private void Awake()

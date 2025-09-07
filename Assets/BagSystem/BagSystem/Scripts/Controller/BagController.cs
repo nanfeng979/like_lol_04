@@ -19,26 +19,24 @@ namespace Game.Bag.Controller
     {
         [Header("视图")]
         [Tooltip("背包视图（包含网格、槽位与背景格子容器）")]
-        public BagView view;
+        public BagView bagView;
 
         [Header("配置（StreamingAssets）")]
         [Tooltip("StreamingAssets 下物品表 Lua 相对路径（优先级高于 JSON）")] public string itemsLuaPath = "Bag/items.lua";
         [Tooltip("StreamingAssets 下背包快照 JSON 相对路径")] public string bagJsonPath = "Bag/bag.json";
 
-        [Header("占位图（Addressables Key）")]
-        [Tooltip("当找不到道具图标时使用的 Addressables 资源键")] public string placeholderIconAddress = "Bag/Placeholders/unknown";
-
         private ItemDatabase _itemDatabase = new ItemDatabase();
         private BagDatabase _bagDatabase = new BagDatabase();
-        private readonly List<BagSlotView> _slots = new List<BagSlotView>();
+        private readonly List<BagSlotView> _bagSlots = new List<BagSlotView>();
         private readonly List<GameObject> _bgSlots = new List<GameObject>();
+        private bool hasCreatedBgSlots = false;
         private bool _isRendering = false;
         private LuaEnv _luaEnv; // 持久化的 Lua 环境，供 usedAction 使用
 
         #region Unity
         private async void Start()
         {
-            if (view == null)
+            if (bagView == null)
             {
                 Debug.LogError("BagController：未绑定 view。");
                 return;
@@ -154,9 +152,12 @@ namespace Game.Bag.Controller
 
         public async Task InitializeAsync()
         {
+            // 处理数据
             _itemDatabase = (await LoadItemDataFromLuaAsync())?.BuildIndex();
             _bagDatabase = await LoadBagDataBaseAsync();
             await ValidateBagDataBaseAsync(_bagDatabase);
+
+            // 处理视图
             await RenderAsync(_bagDatabase);
         }
 
@@ -244,79 +245,67 @@ namespace Game.Bag.Controller
         {
             if (_isRendering) return;
             _isRendering = true;
-            ClearSlots();
+            ClearBagSlots();
             int capacity = bagDatabase.Capacity;
-            EnsureBackgroundCount(capacity);
-            EnsureSlotCount(capacity);
+            RenderBackground(capacity);
+            RenderSlot(capacity);
 
             for (int i = 0; i < capacity; i++)
             {
-                BagSlotView slot = _slots[i];
+                BagSlotView bagSlot = _bagSlots[i];
                 BagItem bagItem = (i < bagDatabase.items.Count) ? bagDatabase.items[i] : null;
                 if (bagItem == null)
                 {
-                    ApplySlot(slot, null, 0);
+                    ApplySlot(bagSlot, null, 0);
                     continue;
                 }
 
                 var iconHandle = await LoadIconHandleAsync(bagItem.itemId);
-                ApplySlot(slot, iconHandle, bagItem.quantity);
+                ApplySlot(bagSlot, iconHandle, bagItem.quantity);
             }
             _isRendering = false;
         }
 
-        private void ClearSlots()
+        private void ClearBagSlots()
         {
-            foreach (BagSlotView slot in _slots)
+            foreach (BagSlotView slot in _bagSlots)
             {
                 if (slot != null) Destroy(slot.gameObject);
             }
-            _slots.Clear();
-            foreach (GameObject bgSlot in _bgSlots)
-            {
-                if (bgSlot != null) Destroy(bgSlot);
-            }
-            _bgSlots.Clear();
+            _bagSlots.Clear();
         }
 
-        private void EnsureSlotCount(int capacity)
+        private void RenderSlot(int capacity)
         {
-            if (view == null || view.slotPrefab == null || view.slotsRoot == null)
+            if (bagView == null || bagView.slotPrefab == null || bagView.slotsRoot == null)
             {
-                Debug.LogError("BagController：view/slotPrefab/slotsRoot 未绑定。");
+                Debug.LogError("BagController：bagView/slotPrefab/slotsRoot 未绑定。");
                 return;
             }
 
-            for (int i = 0; i < capacity; i++)
-            {
-                BagSlotView slot = Instantiate(view.slotPrefab, view.slotsRoot);
-                slot.Bind(i, this);
-                _slots.Add(slot);
-            }
+            _bagSlots.Clear();
+            _bagSlots.AddRange(bagView.CreateSlots(capacity, this));
         }
 
-        private void EnsureBackgroundCount(int capacity)
+        private void RenderBackground(int capacity)
         {
-            if (view == null || view.backgroundPrefab == null || view.backgroundRoot == null)
+            if (hasCreatedBgSlots) return;
+            hasCreatedBgSlots = true;
+
+            if (bagView == null || bagView.backgroundPrefab == null || bagView.backgroundRoot == null)
             {
                 // 背景为可选项，未配置则直接跳过
                 return;
             }
 
             // 确保背景根节点在层级上位于 slotsRoot 之前（背后）
-            if (view.backgroundRoot.transform.GetSiblingIndex() > view.slotsRoot.transform.GetSiblingIndex())
+            if (bagView.backgroundRoot.transform.GetSiblingIndex() > bagView.slotsRoot.transform.GetSiblingIndex())
             {
-                view.backgroundRoot.SetSiblingIndex(view.slotsRoot.GetSiblingIndex());
+                bagView.backgroundRoot.SetSiblingIndex(bagView.slotsRoot.GetSiblingIndex());
             }
 
-            for (int i = 0; i < capacity; i++)
-            {
-                GameObject bg = Instantiate(view.backgroundPrefab, view.backgroundRoot);
-                // 禁用背景的射线阻挡，避免拦截 OnDrop
-                UnityEngine.UI.Image img = bg.GetComponent<UnityEngine.UI.Image>();
-                if (img != null) img.raycastTarget = false;
-                _bgSlots.Add(bg);
-            }
+            _bgSlots.Clear();
+            _bgSlots.AddRange(bagView.CreateBackgrounds(capacity));
         }
 
         private async Task<AsyncOperationHandle<Sprite>?> LoadIconHandleAsync(string itemId)
@@ -329,37 +318,18 @@ namespace Game.Bag.Controller
 
             if (string.IsNullOrEmpty(address))
             {
-                if (!string.IsNullOrEmpty(placeholderIconAddress))
-                {
-                    var ph = Addressables.LoadAssetAsync<Sprite>(placeholderIconAddress);
-                    await ph.Task;
-                    if (ph.Status == AsyncOperationStatus.Succeeded)
-                    {
-                        return ph;
-                    }
-                }
-
                 return null;
             }
 
             var handle = Addressables.LoadAssetAsync<Sprite>(address);
             await handle.Task;
-            if (handle.Status == AsyncOperationStatus.Succeeded)
+            if (handle.Status != AsyncOperationStatus.Succeeded)
             {
-                return handle;
-            }
-            else
-            {
-                Debug.LogWarning($"BagController：加载图标失败：'{address}'，将使用占位图。");
-                if (!string.IsNullOrEmpty(placeholderIconAddress))
-                {
-                    var ph = Addressables.LoadAssetAsync<Sprite>(placeholderIconAddress);
-                    await ph.Task;
-                    if (ph.Status == AsyncOperationStatus.Succeeded)
-                        return ph;
-                }
+                Debug.LogWarning($"BagController：加载图标失败：'{address}'");
                 return null;
             }
+
+            return handle;
         }
 
         private void ApplySlot(BagSlotView slot, AsyncOperationHandle<Sprite>? iconHandle, int quantity)
@@ -379,7 +349,7 @@ namespace Game.Bag.Controller
         /// </summary>
         public RectTransform GetSlotsBoundary()
         {
-            return view != null && view.slotsRoot != null ? view.slotsRoot.parent as RectTransform : null;
+            return bagView != null && bagView.slotsRoot != null ? bagView.slotsRoot.parent as RectTransform : null;
         }
 
         /// <summary>
@@ -424,8 +394,9 @@ namespace Game.Bag.Controller
                     _luaEnv.Dispose();
                     _luaEnv = null;
                 }
-                catch { };
-                
+                catch { }
+                ;
+
             }
         }
 

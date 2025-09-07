@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CanvasGroup))]
+[RequireComponent(typeof(CanvasRenderer))]
 public class BagSystem : MonoBehaviour
 {
     public static BagSystem Instance;
 
-    public CanvasGroup canvasGroup;
+    private CanvasGroup canvasGroup;
 
     private bool isVisible = false;
 
