@@ -1,0 +1,358 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Game.Bag.Model;
+using Game.Bag.View;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+namespace Game.Bag.Controller
+{
+    /// <summary>
+    /// 背包控制器：统一管理 Model 与 View，读取 JSON 与 Addressables，并进行绑定渲染。
+    /// </summary>
+    public partial class BagController : MonoBehaviour
+    {
+        [Header("视图")]
+        [Tooltip("背包视图（包含网格、槽位与背景格子容器）")]
+        public BagView view;
+
+        [Header("配置（StreamingAssets）")]
+        [Tooltip("StreamingAssets 下物品表 JSON 相对路径")] public string itemsJsonPath = "Bag/items.json";
+        [Tooltip("StreamingAssets 下背包快照 JSON 相对路径")] public string bagJsonPath = "Bag/bag.json";
+
+        [Header("占位图（Addressables Key）")]
+        [Tooltip("当找不到道具图标时使用的 Addressables 资源键")] public string placeholderIconAddress = "Bag/Placeholders/unknown";
+
+        private ItemDatabase _itemDatabase = new ItemDatabase();
+        private BagDatabase _bagDatabase = new BagDatabase();
+        private readonly List<BagSlotView> _slots = new List<BagSlotView>();
+        private readonly List<GameObject> _bgSlots = new List<GameObject>();
+        private bool _isRendering = false;
+
+        #region Unity
+        private async void Start()
+        {
+            if (view == null)
+            {
+                Debug.LogError("BagController：未绑定 view。");
+                return;
+            }
+
+            await InitializeAsync();
+        }
+        #endregion
+
+        #region Init Flow
+        /// <summary>
+        /// 异步读取 items.json 并反序列化。
+        /// </summary>
+        /// <returns></returns>
+        private async Task<ItemDatabase> LoadItemDataAsync()
+        {
+            try
+            {
+                var path = Path.Combine(Application.streamingAssetsPath, itemsJsonPath);
+                if (!File.Exists(path))
+                {
+                    Debug.LogWarning($"BagController：未找到 items.json：{path}");
+                    return null;
+                }
+
+                var json = await ReadAllTextAsync(path);
+                var itemsDataBase = JsonUtility.FromJson<ItemDatabase>(json);
+                return itemsDataBase;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"LoadItemDataAsync 错误：{ex}");
+                return null;
+            }
+        }
+
+        private async Task<BagDatabase> LoadBagDataBaseAsync()
+        {
+            var bagDataBase = new BagDatabase();
+
+            try
+            {
+                var path = Path.Combine(Application.streamingAssetsPath, bagJsonPath);
+                if (!File.Exists(path))
+                {
+                    Debug.LogWarning($"BagController：未找到 bag.json：{path}，使用默认值。");
+                    return bagDataBase;
+                }
+
+                var json = await ReadAllTextAsync(path);
+                bagDataBase = JsonUtility.FromJson<BagDatabase>(json) ?? new BagDatabase();
+                NormalizeItemsByIndex(bagDataBase);
+                return bagDataBase;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"LoadBagDataBaseAsync 错误：{ex}");
+                bagDataBase = new BagDatabase();
+                return bagDataBase;
+            }
+        }
+
+        public async Task InitializeAsync()
+        {
+            _itemDatabase = (await LoadItemDataAsync()).BuildIndex();
+            _bagDatabase = await LoadBagDataBaseAsync();
+            await ValidateBagDataBaseAsync(_bagDatabase);
+            await RenderAsync(_bagDatabase);
+        }
+
+        private async Task ValidateBagDataBaseAsync(BagDatabase bagDatabase)
+        {
+            if (bagDatabase == null)
+            {
+                bagDatabase = new BagDatabase();
+            }
+
+            bagDatabase.grid.rows = Math.Max(1, bagDatabase.grid.rows);
+            bagDatabase.grid.columns = Math.Max(1, bagDatabase.grid.columns);
+
+            int capacity = bagDatabase.Capacity;
+
+            // 固定长度：用 null 填充到容量长度，便于按 index 操作（分批让出主线程）
+            for (int i = bagDatabase.items.Count; i < capacity; i++)
+            {
+                bagDatabase.items.Add(null);
+                if ((i & 31) == 0) await Task.Yield(); // 每 32 次让出一帧
+            }
+            if (bagDatabase.items.Count > capacity)
+            {
+                bagDatabase.items.RemoveRange(capacity, bagDatabase.items.Count - capacity);
+                await Task.Yield();
+            }
+
+            // 数量与叠堆校验（跳过空位）
+            for (int i = 0; i < bagDatabase.items.Count; i++)
+            {
+                BagItem bi = bagDatabase.items[i];
+                if (bi == null) continue;
+                // 确保索引与位置一致
+                bi.index = i;
+                if (bi.quantity < 1) bi.quantity = 1;
+
+                if (_itemDatabase.TryGet(bi.itemId, out var data))
+                {
+                    int maxStack = Math.Max(1, data.maxStack <= 0 ? 99 : data.maxStack);
+                    if (bi.quantity > maxStack)
+                    {
+                        Debug.LogWarning($"BagController：道具 {bi.itemId} 数量 {bi.quantity} 超过最大叠堆 {maxStack}，已限制。");
+                        bi.quantity = maxStack;
+                    }
+                }
+                else if (!string.IsNullOrEmpty(bi.itemId))
+                {
+                    Debug.LogWarning($"BagController：未知 itemId '{bi.itemId}'，将渲染占位图。");
+                }
+
+                if ((i & 31) == 0) await Task.Yield();
+            }
+        }
+
+        /// <summary>
+        /// 将 items 列表重排为以 index 为主的固定长度布局；越界的丢弃并告警。
+        /// </summary>
+        private void NormalizeItemsByIndex(BagDatabase bagDatabase)
+        {
+            if (bagDatabase.items == null) return;
+            int capacity = bagDatabase.Capacity;
+            List<BagItem> bagItemsArranged = new List<BagItem>(capacity);
+            for (int i = 0; i < capacity; i++) bagItemsArranged.Add(null);
+
+            foreach (BagItem bagItem in bagDatabase.items)
+            {
+                if (bagItem == null) continue;
+                if (bagItem.index < 0 || bagItem.index >= capacity)
+                {
+                    Debug.LogWarning($"NormalizeItemsByIndex：道具 '{bagItem.itemId}' 的索引 {bagItem.index} 超出容量 {capacity}，已丢弃。");
+                    continue;
+                }
+                if (bagItemsArranged[bagItem.index] != null)
+                {
+                    Debug.LogWarning($"NormalizeItemsByIndex：检测到重复索引 {bagItem.index}，保留第一个，丢弃后来的道具 '{bagItem.itemId}'。");
+                    continue;
+                }
+                bagItemsArranged[bagItem.index] = bagItem;
+            }
+
+            bagDatabase.items = bagItemsArranged;
+        }
+
+        private async Task RenderAsync(BagDatabase bagDatabase)
+        {
+            if (_isRendering) return;
+            _isRendering = true;
+            ClearSlots();
+            int capacity = bagDatabase.Capacity;
+            EnsureBackgroundCount(capacity);
+            EnsureSlotCount(capacity);
+
+            for (int i = 0; i < capacity; i++)
+            {
+                BagSlotView slot = _slots[i];
+                BagItem bagItem = (i < bagDatabase.items.Count) ? bagDatabase.items[i] : null;
+                if (bagItem == null)
+                {
+                    ApplySlot(slot, null, 0);
+                    continue;
+                }
+
+                var iconHandle = await LoadIconHandleAsync(bagItem.itemId);
+                ApplySlot(slot, iconHandle, bagItem.quantity);
+            }
+            _isRendering = false;
+        }
+
+        private void ClearSlots()
+        {
+            foreach (BagSlotView slot in _slots)
+            {
+                if (slot != null) Destroy(slot.gameObject);
+            }
+            _slots.Clear();
+            foreach (GameObject bgSlot in _bgSlots)
+            {
+                if (bgSlot != null) Destroy(bgSlot);
+            }
+            _bgSlots.Clear();
+        }
+
+        private void EnsureSlotCount(int capacity)
+        {
+            if (view == null || view.slotPrefab == null || view.slotsRoot == null)
+            {
+                Debug.LogError("BagController：view/slotPrefab/slotsRoot 未绑定。");
+                return;
+            }
+
+            for (int i = 0; i < capacity; i++)
+            {
+                BagSlotView slot = Instantiate(view.slotPrefab, view.slotsRoot);
+                slot.Bind(i, this);
+                _slots.Add(slot);
+            }
+        }
+
+        private void EnsureBackgroundCount(int capacity)
+        {
+            if (view == null || view.backgroundPrefab == null || view.backgroundRoot == null)
+            {
+                // 背景为可选项，未配置则直接跳过
+                return;
+            }
+
+            // 确保背景根节点在层级上位于 slotsRoot 之前（背后）
+            if (view.backgroundRoot.transform.GetSiblingIndex() > view.slotsRoot.transform.GetSiblingIndex())
+            {
+                view.backgroundRoot.SetSiblingIndex(view.slotsRoot.GetSiblingIndex());
+            }
+
+            for (int i = 0; i < capacity; i++)
+            {
+                GameObject bg = Instantiate(view.backgroundPrefab, view.backgroundRoot);
+                // 禁用背景的射线阻挡，避免拦截 OnDrop
+                UnityEngine.UI.Image img = bg.GetComponent<UnityEngine.UI.Image>();
+                if (img != null) img.raycastTarget = false;
+                _bgSlots.Add(bg);
+            }
+        }
+
+        private async Task<AsyncOperationHandle<Sprite>?> LoadIconHandleAsync(string itemId)
+        {
+            string address = null;
+            if (_itemDatabase.TryGet(itemId, out var data))
+            {
+                address = data.iconAddress;
+            }
+
+            if (string.IsNullOrEmpty(address))
+            {
+                if (!string.IsNullOrEmpty(placeholderIconAddress))
+                {
+                    var ph = Addressables.LoadAssetAsync<Sprite>(placeholderIconAddress);
+                    await ph.Task;
+                    if (ph.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        return ph;
+                    }
+                }
+
+                return null;
+            }
+
+            var handle = Addressables.LoadAssetAsync<Sprite>(address);
+            await handle.Task;
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                return handle;
+            }
+            else
+            {
+                Debug.LogWarning($"BagController：加载图标失败：'{address}'，将使用占位图。");
+                if (!string.IsNullOrEmpty(placeholderIconAddress))
+                {
+                    var ph = Addressables.LoadAssetAsync<Sprite>(placeholderIconAddress);
+                    await ph.Task;
+                    if (ph.Status == AsyncOperationStatus.Succeeded)
+                        return ph;
+                }
+                return null;
+            }
+        }
+
+        private void ApplySlot(BagSlotView slot, AsyncOperationHandle<Sprite>? iconHandle, int quantity)
+        {
+            if (slot == null) return;
+            if (slot.icon != null)
+            {
+                slot.icon.sprite = iconHandle.HasValue ? iconHandle.Value.Result : null;
+                slot.icon.enabled = slot.icon.sprite != null;
+            }
+            slot.SetCount(quantity);
+        }
+
+        #region 公共辅助（供视图调用）
+        /// <summary>
+        /// 返回槽位边界（SlotsRoot 的父 RectTransform）。
+        /// </summary>
+        public RectTransform GetSlotsBoundary()
+        {
+            return view != null && view.slotsRoot != null ? view.slotsRoot.parent as RectTransform : null;
+        }
+
+        /// <summary>
+        /// 获取指定索引的展示名（来自静态表 ItemData；无表则回退 itemId）。
+        /// </summary>
+        public string GetDisplayNameAtIndex(int index)
+        {
+            if (_bagDatabase == null || _bagDatabase.items == null) return null;
+            if (index < 0 || index >= _bagDatabase.items.Count) return null;
+            var bi = _bagDatabase.items[index];
+            if (bi == null) return null;
+            if (_itemDatabase != null && _itemDatabase.TryGet(bi.itemId, out var data) && data != null)
+            {
+                return data.displayName;
+            }
+            return bi.itemId;
+        }
+        #endregion
+
+        private static async Task<string> ReadAllTextAsync(string path)
+        {
+            using (var reader = File.OpenText(path))
+            {
+                return await reader.ReadToEndAsync();
+            }
+        }
+
+        #endregion
+    }
+}

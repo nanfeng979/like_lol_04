@@ -1,0 +1,22 @@
+# 背包系统开发进度
+
+- 2025-09-04
+  - 新增需求文档：`BagSystem_Requirements.md`
+  - 建立目录结构（Scripts/Model|View|Controller，Prefabs，AddressableAssets，StreamingAssets）
+  - 新增脚手架代码：Model（ItemData/BagItem/InventorySnapshot/ItemDatabase）、View（InventoryView/InventorySlotView）、Controller（InventoryController）
+  - 新增示例 JSON：`StreamingAssets/Inventory/items.json`、`StreamingAssets/Inventory/bag.json`
+  - 新增测试：
+    - 在 `InventoryController` 内添加公开测试 API：ReloadFromJsonAndRefresh、RefreshView、SetGridSize、TryAddItem、TrySetItemQuantityAt、TryRemoveItemAt、ClearAllItems
+    - 新增 `InventoryTestPanel` 组件，提供可绑定到 Button 的方法：
+      - Btn_ReloadFromJson、Btn_Refresh、Btn_AddItem、Btn_SetItemQuantityAt、Btn_RemoveItemAt、Btn_ClearAll、Btn_SetGridSize
+  - 结构调整：
+    - `InventorySlotView` 不再持有背景；背景由 `InventoryView` 统一渲染（新增 background 字段）
+  - 待办：
+    - 制作 UGUI 预制体：InventoryView、Slot（金色描边、深色背景，数量文本）
+    - 为 InventoryView 背景设计深色底与金色描边样式
+    - 为占位图与示例图标设置 Addressables Key（如：Inventory/Placeholders/unknown、Inventory/Icons/*）
+    - 在测试场景中挂载 InventoryController、InventoryView 与 InventoryTestPanel，连线引用，给按钮绑定测试方法
+    - 验收：运行时能看到 4x5 网格、图标与数量，日志符合预期
+  - 交互与数据：
+    - `BagItem` 新增 index 字段；加载后按 index 布局，内部列表固定容量长度（空位为 null）
+    - 允许拖拽到空格；交换后仅更新内存；新增 `SaveSnapshotToJson()`，测试面板新增 Btn_SaveSnapshotToJson（模拟关闭背包时写回 JSON）
