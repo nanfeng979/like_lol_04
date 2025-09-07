@@ -1,0 +1,7 @@
+{
+  "grid": { "rows": 4, "columns": 5 },
+  "items": [
+    { "itemId": "potion", "quantity": 12 },
+    { "itemId": "sword", "quantity": 1 }
+  ]
+}
