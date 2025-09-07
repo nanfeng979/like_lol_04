@@ -10,7 +10,7 @@ return {
             iconAddress = "Icons/potion.png",
             maxStack = 99,
             usedAction = function()
-                CS.LikeLoL04.EventSystem.EventBus.Emit("TestEvent", { "a", "bs", "cdd" })
+                CS.LikeLoL04.EventSystem.EventBus.Emit("AddHp", { "10" })
             end
         },
         {
