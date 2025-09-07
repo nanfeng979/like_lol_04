@@ -21,9 +21,6 @@ namespace LikeLoL04.EventSystem
 
         private void Awake()
         {
-            // 初始化总线
-            EventBus.Initialize();
-
             if (dontDestroyOnLoad)
             {
                 DontDestroyOnLoad(gameObject);
@@ -37,9 +34,6 @@ namespace LikeLoL04.EventSystem
             {
                 return;
             }
-
-            // 确保事件总线在场景加载前已初始化
-            EventBus.Initialize();
 
             // 如果项目没有显式放置，引导一次
             GameObject existing = GameObject.Find("[EventSystemBoot]");
