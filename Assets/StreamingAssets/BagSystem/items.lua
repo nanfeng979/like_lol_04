@@ -19,7 +19,7 @@ return {
             iconAddress = "Icons/sword.png",
             maxStack = 1,
             usedAction = function()
-                CS.UnityEngine.Debug.Log("使用了铁剑")
+                CS.LikeLoL04.EventSystem.EventBus.Emit("AddAttack", { "10" })
             end
         },
         {

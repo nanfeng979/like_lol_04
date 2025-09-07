@@ -20,7 +20,11 @@ public class PlayerInfoController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        
+    }
 
+    void Start()
+    {
         EventBus.On("AddHp", (param) =>
         {
             if (param.Length > 0 && param[0] is LuaTable luaTable)
@@ -58,4 +62,5 @@ public class PlayerInfoController : MonoBehaviour
 
         return list;
     }
+    
 }

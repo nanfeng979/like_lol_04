@@ -26,7 +26,7 @@ public class EffectUIController : MonoBehaviour
         HideEnemyEffectUI();
     }
 
-    public void ShowEnemyEffectUI(GameObject gameObject, float offsetY = 0)
+    public void ShowEnemyEffectUI(GameObject gameObject, float offsetY = 0, float damage = 0)
     {
         enemyEffectCanvasGroup.alpha = 1;
         enemyEffectCanvasGroup.blocksRaycasts = true;
@@ -35,6 +35,8 @@ public class EffectUIController : MonoBehaviour
         GameObjectPositionToCanvasPosition(gameObject, out Vector3 canvasPos);
         canvasPos.y += offsetY;
         enemyEffectCanvasGroup.GetComponent<RectTransform>().position = canvasPos;
+
+        enemyEffectCanvasGroup.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = damage.ToString();
 
         StartCoroutine(HideEnemyEffectUIAfterSeconds(0.35f));
     }
@@ -57,4 +59,5 @@ public class EffectUIController : MonoBehaviour
         Vector3 screenPos = Camera.main.WorldToScreenPoint(gameObject.transform.position);
         RectTransformUtility.ScreenPointToWorldPointInRectangle(enemyEffectCanvasGroup.GetComponent<RectTransform>(), screenPos, null, out canvasPos);
     }
+    
 }

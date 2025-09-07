@@ -7,6 +7,5 @@ public class MuzhuangController : MonoBehaviour
     
     public void BeHit()
     {
-        EffectUIController.Instance.ShowEnemyEffectUI(gameObject, 200);
     }
 }
