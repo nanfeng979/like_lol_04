@@ -10,7 +10,7 @@ namespace Game.Bag.View
     /// 单个格子的显示：图标与数量文本（背景由 BagView 统一渲染）。
     /// 支持拖拽交换：视图 -> 控制器 -> 模型 -> 控制器 -> 视图。
     /// </summary>
-    public class BagSlotView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler, IPointerExitHandler
+    public class BagSlotView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         [Header("显示")]
         [Tooltip("道具图标 Image")]
@@ -128,6 +128,18 @@ namespace Game.Bag.View
                 TooltipController.Instance?.Hide();
                 _pointerInside = false;
             }
+        }
+        #endregion
+
+        #region 右键菜单
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button != PointerEventData.InputButton.Right) return;
+            if (controller == null) return;
+            if (!controller.HasItemAt(slotIndex)) return;
+            var currentItemData = controller.GetItemDataAtIndex(slotIndex);
+            if (currentItemData == null) return;
+            currentItemData.Use();
         }
         #endregion
 
