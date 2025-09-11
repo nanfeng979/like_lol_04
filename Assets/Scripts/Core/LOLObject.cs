@@ -1,23 +1,26 @@
 using UnityEngine;
 
-public abstract class LOLObject : MonoBehaviour
+namespace LikeLoL04
 {
-    public int ID { get; private set; }
-    public string Name { get; protected set; }
-
-    public LOLObject(int id, string name)
+    public abstract class LOLObject : MonoBehaviour
     {
-        ID = id;
-        Name = name;
-    }
+        public int ID { get; private set; }
+        public string Name { get; protected set; }
 
-    public LOLObject()
-    {
-        ID = -1;
-        Name = "DefaultLOLObject";
-    }
+        public LOLObject(int id, string name)
+        {
+            ID = id;
+            Name = name;
+        }
 
-    protected virtual void Start() { }
-    
-    protected virtual void Update() { }
+        public LOLObject()
+        {
+            ID = -1;
+            Name = "DefaultLOLObject";
+        }
+
+        protected virtual void Start() { }
+
+        protected virtual void Update() { }
+    }
 }
