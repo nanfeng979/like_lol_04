@@ -22,7 +22,7 @@ namespace LikeLoL04
         public override void OnEnter()
         {
             base.OnEnter();
-            Debug.Log("Entered Default State");
+            LOLGameObject.Animator.Play("Default");
         }
         
         public override void OnUpdate()
