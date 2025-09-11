@@ -7,7 +7,7 @@ using Game.Bag.Model;
 namespace Game.Bag.Controller
 {
     /// <summary>
-    /// 背包控制器 - 测试与调试 API。
+    /// 背包控制器 - API。
     /// </summary>
     public partial class BagController : MonoBehaviour
     {
@@ -103,9 +103,9 @@ namespace Game.Bag.Controller
                     break;
                 }
 
-                    int toAdd = Mathf.Min(maxStack, remaining);
-                    var bi = new BagItem { itemId = itemId, quantity = toAdd };
-                    _bagDatabase.items.Add(bi);
+                int toAdd = Mathf.Min(maxStack, remaining);
+                var bi = new BagItem { itemId = itemId, quantity = toAdd };
+                _bagDatabase.items.Add(bi);
                 remaining -= toAdd;
                 changed = true;
             }
@@ -219,6 +219,47 @@ namespace Game.Bag.Controller
                 Debug.LogError($"SaveSnapshotToJson 错误：{ex}");
             }
         }
+
+        /// <summary>
+        /// 返回槽位边界（SlotsRoot 的父 RectTransform）。
+        /// </summary>
+        public RectTransform GetSlotsBoundary()
+        {
+            return bagView != null && bagView.slotsRoot != null ? bagView.slotsRoot.parent as RectTransform : null;
+        }
+
+        /// <summary>
+        /// 获取指定索引的展示名（来自静态表 ItemData；无表则回退 itemId）。
+        /// </summary>
+        public string GetDisplayNameAtIndex(int index)
+        {
+            if (_bagDatabase == null || _bagDatabase.items == null) return null;
+            if (index < 0 || index >= _bagDatabase.items.Count) return null;
+            var bi = _bagDatabase.items[index];
+            if (bi == null) return null;
+            if (_itemDatabase != null && _itemDatabase.TryGet(bi.itemId, out var data) && data != null)
+            {
+                return data.displayName;
+            }
+            return bi.itemId;
+        }
+
+        /// <summary>
+        /// 获取指定索引的 ItemData（可能为 null）。
+        /// </summary>
+        public ItemData GetItemDataAtIndex(int index)
+        {
+            if (_bagDatabase == null || _bagDatabase.items == null) return null;
+            if (index < 0 || index >= _bagDatabase.items.Count) return null;
+            var bi = _bagDatabase.items[index];
+            if (bi == null) return null;
+            if (_itemDatabase != null && _itemDatabase.TryGet(bi.itemId, out var data) && data != null)
+            {
+                return data;
+            }
+            return null;
+        }
+        
         #endregion
     }
 }
