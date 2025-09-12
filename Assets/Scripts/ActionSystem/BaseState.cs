@@ -9,21 +9,21 @@ namespace LikeLoL04
     public abstract class BaseState : IState
     {
         #region Protected Fields
-        
+
         /// <summary>
         /// 状态所属的状态机
         /// </summary>
         protected StateMachine stateMachine;
-        
+
         /// <summary>
         /// 游戏对象引用
         /// </summary>
         protected LOLGameObject LOLGameObject;
-        
+
         #endregion
-        
+
         #region Constructor
-        
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -34,11 +34,11 @@ namespace LikeLoL04
             this.stateMachine = stateMachine;
             this.LOLGameObject = LOLGameObject;
         }
-        
+
         #endregion
-        
+
         #region IState Implementation
-        
+
         /// <summary>
         /// 进入状态
         /// </summary>
@@ -46,7 +46,7 @@ namespace LikeLoL04
         {
             Debug.Log($"进入状态: {GetType().Name}");
         }
-        
+
         /// <summary>
         /// 状态更新
         /// </summary>
@@ -54,7 +54,7 @@ namespace LikeLoL04
         {
             // 子类实现具体的更新逻辑
         }
-        
+
         /// <summary>
         /// 退出状态
         /// </summary>
@@ -62,7 +62,7 @@ namespace LikeLoL04
         {
             Debug.Log($"退出状态: {GetType().Name}");
         }
-        
+
         /// <summary>
         /// 检查是否可以切换到目标状态
         /// </summary>
@@ -73,11 +73,11 @@ namespace LikeLoL04
             // 默认情况下允许切换到任何状态，子类可以重写此方法来限制状态切换
             return true;
         }
-        
+
         #endregion
-        
+
         #region Protected Methods
-        
+
         /// <summary>
         /// 切换到指定状态的辅助方法
         /// </summary>
@@ -86,7 +86,10 @@ namespace LikeLoL04
         {
             stateMachine.TransitionTo<T>();
         }
-        
+
         #endregion
+        
+        // 动画过渡时间（秒）
+        protected float animationTransitionDuration = 0.25f;
     }
 }

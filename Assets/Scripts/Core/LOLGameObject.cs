@@ -15,7 +15,19 @@ namespace LikeLoL04
         /// <summary>
         /// 状态机
         /// </summary>
-        private StateMachine stateMachine;
+        protected StateMachine stateMachine;
+
+        /// <summary>
+        /// 目标
+        /// </summary>
+        public LOLGameObject Target { get; set; }
+
+        /// <summary>
+        /// 目标位置
+        /// </summary>
+        public Vector3 TargetPosition { get; set; }
+
+        public float MoveSpeed { get; set; } = 100.0f;
 
         protected override void Start()
         {
@@ -36,5 +48,10 @@ namespace LikeLoL04
             stateMachine.Update();
         }
 
+        public void MoveToPosition(Vector3 position)
+        {
+            TargetPosition = position;
+            stateMachine.TransitionTo<MoveState>();
+        }
     }
 }
