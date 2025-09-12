@@ -22,10 +22,8 @@ namespace LikeLoL04
         public override void OnEnter()
         {
             base.OnEnter();
-            // 使用 CrossFade 进行平滑过渡（"Move" 为动画状态名，需要与 Animator 控制器一致）
             if (LOLGameObject.Animator != null)
             {
-                // 第三个参数 layer = -1 表示所有层，第四个参数 normalizedTime = 0 表示从头开始
                 LOLGameObject.Animator.CrossFade("Default", animationTransitionDuration, -1, 0f);
             }
         }

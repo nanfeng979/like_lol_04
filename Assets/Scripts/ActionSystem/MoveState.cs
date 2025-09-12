@@ -16,29 +16,46 @@ namespace LikeLoL04
         // 到达目标的停止距离阈值
         private float stopDistance = 0.5f;
 
+        // 旋转总耗时（秒）
+        private float rotationDuration = 0.3f;
+        private float rotationElapsed = 0f;
+        private Quaternion initialRotation;
+        private Quaternion targetRotation;
+
+        // 离散旋转步数（在一次旋转时长内进行多少次插值更新）
+        private int rotationSteps = 6;
+        private int lastRotationStepIndex = -1;
+
         #region Constructor
 
         public MoveState(StateMachine stateMachine, LOLGameObject LOLGameObject)
             : base(stateMachine, LOLGameObject)
         {
             this.moveSpeed = LOLGameObject.MoveSpeed;
+            this.rotationDuration = LOLGameObject.RotationDuration;
         }
 
         #endregion
-        
+
         #region State Implementation
 
         public override void OnEnter()
         {
             base.OnEnter();
-            // 使用 CrossFade 进行平滑过渡（"Move" 为动画状态名，需要与 Animator 控制器一致）
             if (LOLGameObject.Animator != null)
             {
-                // 第三个参数 layer = -1 表示所有层，第四个参数 normalizedTime = 0 表示从头开始
                 LOLGameObject.Animator.CrossFade("Move", animationTransitionDuration, -1, 0f);
             }
+
+            // 每次进入状态时重置旋转插值
+            rotationElapsed = 0f;
+            initialRotation = LOLGameObject.transform.rotation;
+
+            // 初始化一个默认的 targetRotation（如果后面检测到目标会更新）
+            targetRotation = initialRotation;
+            lastRotationStepIndex = -1;
         }
-        
+
         public override void OnUpdate()
         {
             base.OnUpdate();
@@ -53,31 +70,18 @@ namespace LikeLoL04
 
             // 计算目标位置（以目标的 Transform 为准）
             Vector3 targetPos = target != null ? target.transform.position : LOLGameObject.TargetPosition;
-            Vector3 currentPos = LOLGameObject.transform.position;
 
-            // 计算距离
-            float distance = Vector3.Distance(currentPos, targetPos);
-
-            // 如果已经足够接近，切回默认状态
-            if (distance <= stopDistance)
+            // 处理移动，若已到达则回到默认状态
+            if (HandleMovement(targetPos))
             {
                 stateMachine.TransitionTo<DefaultState>();
                 return;
             }
 
-            // 移动朝向目标（平滑移动）
-            Vector3 direction = (targetPos - currentPos).normalized;
-            Vector3 move = direction * moveSpeed * Time.deltaTime;
-
-            // 避免超越目标
-            if (move.magnitude > distance)
-            {
-                move = direction * distance;
-            }
-
-            LOLGameObject.transform.position = currentPos + move;
+            // 处理旋转
+            HandleRotation(targetPos);
         }
-        
+
         public override void OnExit()
         {
             base.OnExit();
@@ -88,9 +92,77 @@ namespace LikeLoL04
             base.CanTransitionTo(targetState);
             return true;
         }
-        
+
+        // 处理离散旋转，使前向 Z 轴朝向 targetPos
+        private void HandleRotation(Vector3 targetPos)
+        {
+            // 计算新方向（只考虑水平平面可选：若需要忽略高度差可将 lookDir.y = 0）
+            Vector3 lookDir = (targetPos - LOLGameObject.transform.position).normalized;
+            if (lookDir.sqrMagnitude <= 0.0001f)
+                return;
+
+            Quaternion desired = Quaternion.LookRotation(lookDir, Vector3.up);
+
+            // 判断是否需要重新开始一轮旋转（角度变化阈值）
+            if (rotationElapsed == 0f || Quaternion.Angle(targetRotation, desired) > 5f)
+            {
+                initialRotation = LOLGameObject.transform.rotation;
+                targetRotation = desired;
+                rotationElapsed = 0f;
+                lastRotationStepIndex = -1;
+            }
+
+            if (rotationElapsed < rotationDuration)
+            {
+                rotationElapsed += Time.deltaTime;
+                float totalT = Mathf.Clamp01(rotationElapsed / rotationDuration);
+
+                // 根据 totalT 计算当前应处于第几个离散步
+                int currentStepIndex = Mathf.Clamp(Mathf.FloorToInt(totalT * rotationSteps), 0, rotationSteps);
+
+                // 只有当步进前进时才更新旋转（离散化）
+                if (currentStepIndex > lastRotationStepIndex)
+                {
+                    lastRotationStepIndex = currentStepIndex;
+                    float stepT = (float)currentStepIndex / rotationSteps; // 量化后的插值系数
+                    LOLGameObject.transform.rotation = Quaternion.Slerp(initialRotation, targetRotation, stepT);
+                }
+
+                // 到达最终步确保精确设置目标朝向
+                if (currentStepIndex >= rotationSteps)
+                {
+                    LOLGameObject.transform.rotation = targetRotation;
+                }
+            }
+            else
+            {
+                // 已完成旋转
+                LOLGameObject.transform.rotation = targetRotation;
+            }
+        }
+
+        // 处理移动，返回是否到达停止距离
+        private bool HandleMovement(Vector3 targetPos)
+        {
+            Vector3 currentPos = LOLGameObject.transform.position;
+            float distance = Vector3.Distance(currentPos, targetPos);
+            if (distance <= stopDistance)
+            {
+                return true; // 已到达
+            }
+
+            Vector3 direction = (targetPos - currentPos).normalized;
+            Vector3 move = direction * moveSpeed * Time.deltaTime;
+            if (move.magnitude > distance)
+            {
+                move = direction * distance;
+            }
+            LOLGameObject.transform.position = currentPos + move;
+            return false;
+        }
+
         #endregion
-        
+
     }
 
 }

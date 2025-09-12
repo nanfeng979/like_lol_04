@@ -27,7 +27,9 @@ namespace LikeLoL04
         /// </summary>
         public Vector3 TargetPosition { get; set; }
 
-        public float MoveSpeed { get; set; } = 100.0f;
+        public float MoveSpeed { get; set; } = 200.0f;
+
+        public float RotationDuration { get; set; } = 0.1f;
 
         protected override void Start()
         {
