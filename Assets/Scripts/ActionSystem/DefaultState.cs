@@ -10,9 +10,10 @@ namespace LikeLoL04
     {
         #region Constructor
 
-        public DefaultState(StateMachine stateMachine, LOLGameObject LOLGameObject) 
+        public DefaultState(StateMachine stateMachine, LOLGameObject LOLGameObject)
             : base(stateMachine, LOLGameObject)
         {
+            this.animator = LOLGameObject.Animator;
         }
 
         #endregion
@@ -22,10 +23,8 @@ namespace LikeLoL04
         public override void OnEnter()
         {
             base.OnEnter();
-            if (LOLGameObject.Animator != null)
-            {
-                LOLGameObject.Animator.CrossFade("Default", animationTransitionDuration, -1, 0f);
-            }
+            float dur = stateMachine.CurrentTransitionDuration;
+            animator.CrossFade("Default", dur, -1, 0f);
         }
         
         public override void OnUpdate()

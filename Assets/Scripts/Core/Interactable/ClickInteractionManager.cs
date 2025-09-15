@@ -12,7 +12,7 @@ namespace LikeLoL04
         [SerializeField] private Camera mainCamera;
         [SerializeField] private LayerMask interactableLayerMask;
 
-        public MainPlayerInteractable player;
+        public LOLGameObject player;
 
         void Awake()
         {
@@ -37,13 +37,16 @@ namespace LikeLoL04
                 Ground ground = hit.collider.GetComponent<Ground>();
                 if (ground != null)
                 {
-                    player.MoveTo(hit.point);
+                    Debug.Log("点击地面，移动到位置: " + hit.point);
+                    player.MoveToPosition(hit.point);
                     return;
                 }
-                IInteractable interactable = hit.collider.GetComponent<IInteractable>();
-                if (interactable != null)
+                LOLGameObject lolGameObject = hit.collider.GetComponent<LOLGameObject>();
+                if (lolGameObject != null)
                 {
-                    player.SetInteractionTarget(interactable);
+                    Debug.Log("点击可交互对象: " + lolGameObject.Name);
+                    player.MoveToTarget(lolGameObject);
+                    return;
                 }
             }
         }

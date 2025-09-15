@@ -11,6 +11,9 @@ namespace LikeLoL04
             base.Start();
             Camp = new Camp { Type = CampType.Blue };
             stateMachine.RegisterState(new MoveState(stateMachine, this));
+            stateMachine.RegisterState(new AttackState(stateMachine, this));
+
+            stateMachine.TransitionTo<AttackState>();
         }
 
         protected override void Update()

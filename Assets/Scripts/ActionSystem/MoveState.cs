@@ -44,7 +44,8 @@ namespace LikeLoL04
             base.OnEnter();
             if (LOLGameObject.Animator != null)
             {
-                LOLGameObject.Animator.CrossFade("Move", animationTransitionDuration, -1, 0f);
+                float dur = stateMachine.CurrentTransitionDuration;
+                LOLGameObject.Animator.CrossFade("Move", dur, -1, 0f);
             }
 
             // 每次进入状态时重置旋转插值

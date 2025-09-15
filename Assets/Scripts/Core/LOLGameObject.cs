@@ -27,6 +27,8 @@ namespace LikeLoL04
         /// </summary>
         public Vector3 TargetPosition { get; set; }
 
+        public bool IsMoveToTarget => Target != null;
+
         public float MoveSpeed { get; set; } = 200.0f;
 
         public float RotationDuration { get; set; } = 0.1f;
@@ -41,6 +43,9 @@ namespace LikeLoL04
 
             // 初始状态设为待机
             stateMachine.TransitionTo<DefaultState>();
+
+            // 配置 Attack -> Default 的过渡时长（未配置的其他过渡将使用状态机默认值）
+            stateMachine.SetTransitionDuration<AttackState, DefaultState>(0.12f);
         }
 
         protected override void Update()
@@ -63,5 +68,20 @@ namespace LikeLoL04
 
             stateMachine.TransitionTo<MoveState>();
         }
+
+        public void MoveToTarget(LOLGameObject target)
+        {
+            // 移动到指定目标
+            Target = target;
+            TargetPosition = Vector3.zero; // 清空目标位置，确保以目标对象为准
+
+            if (stateMachine.CurrentStateType == typeof(MoveState))
+            {
+                return;
+            }
+
+            stateMachine.TransitionTo<MoveState>();
+        }
+
     }
 }
