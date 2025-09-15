@@ -52,7 +52,15 @@ namespace LikeLoL04
 
         public void MoveToPosition(Vector3 position)
         {
+            // 移动到指定位置：如果当前已处于移动状态，仅更新目标位置，避免重复进入导致动画重置
+            Target = null; // 清空目标对象，确保以目标点为准
             TargetPosition = position;
+
+            if (stateMachine.CurrentStateType == typeof(MoveState))
+            {
+                return;
+            }
+
             stateMachine.TransitionTo<MoveState>();
         }
     }
