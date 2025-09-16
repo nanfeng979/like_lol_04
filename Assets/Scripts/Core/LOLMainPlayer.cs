@@ -10,8 +10,6 @@ namespace LikeLoL04
         {
             base.Start();
             Camp = new Camp { Type = CampType.Blue };
-            stateMachine.RegisterState(new MoveState(stateMachine, this));
-            stateMachine.RegisterState(new AttackState(stateMachine, this));
 
             AttackRange = 200f;
         }
@@ -19,8 +17,22 @@ namespace LikeLoL04
         protected override void Update()
         {
             base.Update();
+
+            // 按下 Q 键切换到 Spell1 状态
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                stateMachine.TransitionTo<Spell1_run>();
+            }
         }
 
+        protected override void RegisterStates()
+        {
+            base.RegisterStates();
+            stateMachine.RegisterState(new MoveState(stateMachine, this));
+            stateMachine.RegisterState(new AttackState(stateMachine, this));
+            stateMachine.RegisterState(new Spell1(stateMachine, this));
+            stateMachine.RegisterState(new Spell1_run(stateMachine, this));
+        }
     }
 }
 

@@ -43,7 +43,7 @@ namespace LikeLoL04
             Animator = GetComponent<Animator>();
 
             stateMachine = new StateMachine();
-            stateMachine.RegisterState(new DefaultState(stateMachine, this));
+            RegisterStates();
 
             // 初始状态设为待机
             SetDefaultState();
@@ -70,6 +70,11 @@ namespace LikeLoL04
                 return;
             }
 
+            if (stateMachine.CurrentStateType == typeof(Spell1_run))
+            {
+                return;
+            }
+
             stateMachine.TransitionTo<MoveState>();
         }
 
@@ -84,7 +89,17 @@ namespace LikeLoL04
                 return;
             }
 
+            if (stateMachine.CurrentStateType == typeof(Spell1_run))
+            {
+                return;
+            }
+
             stateMachine.TransitionTo<MoveState>();
+        }
+
+        protected virtual void RegisterStates()
+        {
+            stateMachine.RegisterState(new DefaultState(stateMachine, this));
         }
 
         protected virtual void SetDefaultState()
