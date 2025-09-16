@@ -37,14 +37,12 @@ namespace LikeLoL04
                 Ground ground = hit.collider.GetComponent<Ground>();
                 if (ground != null)
                 {
-                    Debug.Log("点击地面，移动到位置: " + hit.point);
                     player.MoveToPosition(hit.point);
                     return;
                 }
                 LOLGameObject lolGameObject = hit.collider.GetComponent<LOLGameObject>();
                 if (lolGameObject != null)
                 {
-                    Debug.Log("点击可交互对象: " + lolGameObject.Name);
                     player.MoveToTarget(lolGameObject);
                     return;
                 }

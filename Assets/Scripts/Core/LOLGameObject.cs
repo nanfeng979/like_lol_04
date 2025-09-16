@@ -65,11 +65,6 @@ namespace LikeLoL04
             Target = null; // 清空目标对象，确保以目标点为准
             TargetPosition = position;
 
-            if (stateMachine.CurrentStateType == typeof(MoveState))
-            {
-                return;
-            }
-
             if (stateMachine.CurrentStateType == typeof(Spell1_run))
             {
                 return;
@@ -83,11 +78,6 @@ namespace LikeLoL04
             // 移动到指定目标
             Target = target;
             TargetPosition = Vector3.zero; // 清空目标位置，确保以目标对象为准
-
-            if (stateMachine.CurrentStateType == typeof(MoveState))
-            {
-                return;
-            }
 
             if (stateMachine.CurrentStateType == typeof(Spell1_run))
             {

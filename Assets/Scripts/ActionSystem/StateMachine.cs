@@ -97,7 +97,6 @@ namespace LikeLoL04
             // 检查当前状态是否允许切换
             if (currentState != null && !currentState.CanTransitionTo(stateType))
             {
-                Debug.LogWarning($"当前状态 {currentState.GetType().Name} 不允许切换到 {stateType.Name}");
                 return false;
             }
 

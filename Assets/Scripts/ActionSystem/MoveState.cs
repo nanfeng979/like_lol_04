@@ -101,8 +101,7 @@ namespace LikeLoL04
 
         public override bool CanTransitionTo(Type targetState)
         {
-            base.CanTransitionTo(targetState);
-            return true;
+            return targetState != typeof(MoveState);
         }
 
         // 处理离散旋转，使前向 Z 轴朝向 targetPos
