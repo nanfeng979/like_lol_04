@@ -13,7 +13,7 @@ namespace LikeLoL04
             stateMachine.RegisterState(new MoveState(stateMachine, this));
             stateMachine.RegisterState(new AttackState(stateMachine, this));
 
-            stateMachine.TransitionTo<AttackState>();
+            AttackRange = 200f;
         }
 
         protected override void Update()

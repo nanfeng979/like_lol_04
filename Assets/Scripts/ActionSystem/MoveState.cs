@@ -72,6 +72,17 @@ namespace LikeLoL04
             // 计算目标位置（以目标的 Transform 为准）
             Vector3 targetPos = target != null ? target.transform.position : LOLGameObject.TargetPosition;
 
+            // 若存在 Target 并且进入攻击范围，切换到 AttackState
+            if (target != null)
+            {
+                float distToTarget = Vector3.Distance(LOLGameObject.transform.position, target.transform.position);
+                if (distToTarget <= LOLGameObject.AttackRange)
+                {
+                    stateMachine.TransitionTo<AttackState>();
+                    return;
+                }
+            }
+
             // 处理移动，若已到达则回到默认状态
             if (HandleMovement(targetPos))
             {

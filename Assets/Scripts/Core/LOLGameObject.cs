@@ -33,6 +33,10 @@ namespace LikeLoL04
 
         public float RotationDuration { get; set; } = 0.1f;
 
+        [Header("Combat Settings")]
+        [SerializeField]
+        public float AttackRange = 200f;
+
         protected override void Start()
         {
             base.Start();
@@ -42,7 +46,7 @@ namespace LikeLoL04
             stateMachine.RegisterState(new DefaultState(stateMachine, this));
 
             // 初始状态设为待机
-            stateMachine.TransitionTo<DefaultState>();
+            SetDefaultState();
 
             // 配置 Attack -> Default 的过渡时长（未配置的其他过渡将使用状态机默认值）
             stateMachine.SetTransitionDuration<AttackState, DefaultState>(0.12f);
@@ -83,5 +87,9 @@ namespace LikeLoL04
             stateMachine.TransitionTo<MoveState>();
         }
 
+        protected virtual void SetDefaultState()
+        {
+            stateMachine.TransitionTo<DefaultState>();
+        }
     }
 }
