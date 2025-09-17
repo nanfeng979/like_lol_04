@@ -83,7 +83,7 @@ namespace LikeLoL04
             else
             {
                 // 没有碰到任何物体，使用默认光标
-                SetCursor(LOLGameConfig.Instance.DefaultCursor);
+                SetCursor(null);
             }
         }
 

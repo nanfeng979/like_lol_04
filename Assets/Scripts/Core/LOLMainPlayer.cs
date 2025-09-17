@@ -22,6 +22,9 @@ namespace LikeLoL04
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 stateMachine.TransitionTo<Spell1_run>();
+            } else if (Input.GetKeyDown(KeyCode.E))
+            {
+                stateMachine.TransitionTo<Spell3>();
             }
         }
 
@@ -32,6 +35,7 @@ namespace LikeLoL04
             stateMachine.RegisterState(new AttackState(stateMachine, this));
             stateMachine.RegisterState(new Spell1(stateMachine, this));
             stateMachine.RegisterState(new Spell1_run(stateMachine, this));
+            stateMachine.RegisterState(new Spell3(stateMachine, this));
         }
     }
 }

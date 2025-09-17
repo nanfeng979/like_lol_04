@@ -38,7 +38,7 @@ namespace LikeLoL04
         /// </summary>
         public void MoveTo(Vector3 position)
         {
-            mainPlayer.MoveToPosition(position);
+            mainPlayer.InteractWithPosition(position);
         }
 
         /// <summary>

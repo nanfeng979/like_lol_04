@@ -42,15 +42,15 @@ namespace LikeLoL04
         public override void OnEnter()
         {
             base.OnEnter();
-            if (LOLGameObject.Animator != null)
+            if (selfLOLGameObject.animator != null)
             {
                 float dur = stateMachine.CurrentTransitionDuration;
-                LOLGameObject.Animator.CrossFade("Spell1_run", dur, -1, 0f);
+                selfLOLGameObject.animator.CrossFade("Spell1_run", dur, -1, 0f);
             }
 
             // 每次进入状态时重置旋转插值
             rotationElapsed = 0f;
-            initialRotation = LOLGameObject.transform.rotation;
+            initialRotation = selfLOLGameObject.transform.rotation;
 
             // 初始化一个默认的 targetRotation（如果后面检测到目标会更新）
             targetRotation = initialRotation;
@@ -62,21 +62,21 @@ namespace LikeLoL04
             base.OnUpdate();
 
             // 如果没有目标，直接返回到默认状态
-            var target = LOLGameObject.Target;
-            if (target == null && LOLGameObject.TargetPosition == null)
+            var target = selfLOLGameObject.Target;
+            if (target == null && selfLOLGameObject.TargetPosition == null)
             {
                 stateMachine.TransitionTo<DefaultState>();
                 return;
             }
 
             // 计算目标位置（以目标的 Transform 为准）
-            Vector3 targetPos = target != null ? target.transform.position : LOLGameObject.TargetPosition;
+            Vector3 targetPos = target != null ? target.transform.position : selfLOLGameObject.TargetPosition;
 
             // 若存在 Target 并且进入攻击范围，切换到 AttackState
             if (target != null)
             {
-                float distToTarget = Vector3.Distance(LOLGameObject.transform.position, target.transform.position);
-                if (distToTarget <= LOLGameObject.AttackRange)
+                float distToTarget = Vector3.Distance(selfLOLGameObject.transform.position, target.transform.position);
+                if (distToTarget <= selfLOLGameObject.AttackRange)
                 {
                     stateMachine.TransitionTo<Spell1>();
                     return;
@@ -108,7 +108,7 @@ namespace LikeLoL04
         private void HandleRotation(Vector3 targetPos)
         {
             // 计算新方向（只考虑水平平面可选：若需要忽略高度差可将 lookDir.y = 0）
-            Vector3 lookDir = (targetPos - LOLGameObject.transform.position).normalized;
+            Vector3 lookDir = (targetPos - selfLOLGameObject.transform.position).normalized;
             if (lookDir.sqrMagnitude <= 0.0001f)
                 return;
 
@@ -117,7 +117,7 @@ namespace LikeLoL04
             // 判断是否需要重新开始一轮旋转（角度变化阈值）
             if (rotationElapsed == 0f || Quaternion.Angle(targetRotation, desired) > 5f)
             {
-                initialRotation = LOLGameObject.transform.rotation;
+                initialRotation = selfLOLGameObject.transform.rotation;
                 targetRotation = desired;
                 rotationElapsed = 0f;
                 lastRotationStepIndex = -1;
@@ -136,26 +136,26 @@ namespace LikeLoL04
                 {
                     lastRotationStepIndex = currentStepIndex;
                     float stepT = (float)currentStepIndex / rotationSteps; // 量化后的插值系数
-                    LOLGameObject.transform.rotation = Quaternion.Slerp(initialRotation, targetRotation, stepT);
+                    selfLOLGameObject.transform.rotation = Quaternion.Slerp(initialRotation, targetRotation, stepT);
                 }
 
                 // 到达最终步确保精确设置目标朝向
                 if (currentStepIndex >= rotationSteps)
                 {
-                    LOLGameObject.transform.rotation = targetRotation;
+                    selfLOLGameObject.transform.rotation = targetRotation;
                 }
             }
             else
             {
                 // 已完成旋转
-                LOLGameObject.transform.rotation = targetRotation;
+                selfLOLGameObject.transform.rotation = targetRotation;
             }
         }
 
         // 处理移动，返回是否到达停止距离
         private bool HandleMovement(Vector3 targetPos)
         {
-            Vector3 currentPos = LOLGameObject.transform.position;
+            Vector3 currentPos = selfLOLGameObject.transform.position;
             float distance = Vector3.Distance(currentPos, targetPos);
             if (distance <= stopDistance)
             {
@@ -168,7 +168,7 @@ namespace LikeLoL04
             {
                 move = direction * distance;
             }
-            LOLGameObject.transform.position = currentPos + move;
+            selfLOLGameObject.transform.position = currentPos + move;
             return false;
         }
 

@@ -13,7 +13,7 @@ namespace LikeLoL04
         public Spell1(StateMachine stateMachine, LOLGameObject LOLGameObject)
             : base(stateMachine, LOLGameObject)
         {
-            this.animator = LOLGameObject.Animator;
+            this.animator = LOLGameObject.animator;
         }
 
         #endregion

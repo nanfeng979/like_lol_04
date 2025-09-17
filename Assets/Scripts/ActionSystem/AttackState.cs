@@ -18,10 +18,10 @@ namespace LikeLoL04
 
         #region Constructor
 
-        public AttackState(StateMachine stateMachine, LOLGameObject LOLGameObject)
-            : base(stateMachine, LOLGameObject)
+        public AttackState(StateMachine stateMachine, LOLGameObject selfLOLGameObject)
+            : base(stateMachine, selfLOLGameObject)
         {
-            this.animator = LOLGameObject.Animator;
+            this.animator = selfLOLGameObject.animator;
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace LikeLoL04
             {
                 faceRotationElapsed += Time.deltaTime;
                 float t = Mathf.Clamp01(faceRotationElapsed / faceRotationDuration);
-                LOLGameObject.transform.rotation = Quaternion.Slerp(faceInitialRot, faceTargetRot, t);
+                selfLOLGameObject.transform.rotation = Quaternion.Slerp(faceInitialRot, faceTargetRot, t);
             }
 
             int layer = 0;
@@ -78,18 +78,18 @@ namespace LikeLoL04
         private void SetupFaceTargetTween()
         {
             Vector3? targetPos = null;
-            if (LOLGameObject.Target != null)
+            if (selfLOLGameObject.Target != null)
             {
-                targetPos = LOLGameObject.Target.transform.position;
+                targetPos = selfLOLGameObject.Target.transform.position;
             }
-            else if (LOLGameObject.TargetPosition != Vector3.zero)
+            else if (selfLOLGameObject.TargetPosition != Vector3.zero)
             {
-                targetPos = LOLGameObject.TargetPosition;
+                targetPos = selfLOLGameObject.TargetPosition;
             }
 
             faceRotationElapsed = 0f;
-            faceRotationDuration = Mathf.Max(0.01f, LOLGameObject.RotationDuration);
-            faceInitialRot = LOLGameObject.transform.rotation;
+            faceRotationDuration = Mathf.Max(0.01f, selfLOLGameObject.RotationDuration);
+            faceInitialRot = selfLOLGameObject.transform.rotation;
 
             if (!targetPos.HasValue)
             {
@@ -97,7 +97,7 @@ namespace LikeLoL04
                 return;
             }
 
-            Vector3 currentPos = LOLGameObject.transform.position;
+            Vector3 currentPos = selfLOLGameObject.transform.position;
             Vector3 lookDir = (targetPos.Value - currentPos);
             lookDir.y = 0f; // 仅水平朝向
 

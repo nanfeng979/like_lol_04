@@ -18,7 +18,7 @@ namespace LikeLoL04
         /// <summary>
         /// 游戏对象引用
         /// </summary>
-        protected LOLGameObject LOLGameObject;
+        protected LOLGameObject selfLOLGameObject;
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace LikeLoL04
         public BaseState(StateMachine stateMachine, LOLGameObject LOLGameObject)
         {
             this.stateMachine = stateMachine;
-            this.LOLGameObject = LOLGameObject;
+            this.selfLOLGameObject = LOLGameObject;
         }
 
         #endregion
@@ -44,7 +44,7 @@ namespace LikeLoL04
         /// </summary>
         public virtual void OnEnter()
         {
-            Debug.Log($"进入状态: {GetType().Name}");
+            // Debug.Log($"进入状态: {GetType().Name}");
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace LikeLoL04
         /// </summary>
         public virtual void OnExit()
         {
-            Debug.Log($"退出状态: {GetType().Name}");
+            // Debug.Log($"退出状态: {GetType().Name}");
         }
 
         /// <summary>

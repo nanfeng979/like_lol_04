@@ -126,7 +126,7 @@ namespace LikeLoL04
             currentState = stateDict[stateType];
             currentState.OnEnter();
 
-            Debug.Log($"状态切换: {stateType.Name}");
+            // Debug.Log($"状态切换: {stateType.Name}");
             return true;
         }
 

@@ -37,13 +37,13 @@ namespace LikeLoL04
                 Ground ground = hit.collider.GetComponent<Ground>();
                 if (ground != null)
                 {
-                    player.MoveToPosition(hit.point);
+                    player.InteractWithPosition(hit.point);
                     return;
                 }
                 LOLGameObject lolGameObject = hit.collider.GetComponent<LOLGameObject>();
                 if (lolGameObject != null)
                 {
-                    player.MoveToTarget(lolGameObject);
+                    player.InteractWithTarget(lolGameObject);
                     return;
                 }
             }

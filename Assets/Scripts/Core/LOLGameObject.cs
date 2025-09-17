@@ -10,7 +10,7 @@ namespace LikeLoL04
         [SerializeField]
         public Camp Camp;
 
-        public Animator Animator { get; private set; }
+        public Animator animator { get; private set; }
 
         /// <summary>
         /// 状态机
@@ -31,7 +31,7 @@ namespace LikeLoL04
 
         public float MoveSpeed { get; set; } = 200.0f;
 
-        public float RotationDuration { get; set; } = 0.1f;
+        public float RotationDuration { get; set; } = 0.3f;
 
         [Header("Combat Settings")]
         [SerializeField]
@@ -40,7 +40,7 @@ namespace LikeLoL04
         protected override void Start()
         {
             base.Start();
-            Animator = GetComponent<Animator>();
+            animator = GetComponent<Animator>();
 
             stateMachine = new StateMachine();
             RegisterStates();
@@ -59,34 +59,6 @@ namespace LikeLoL04
             stateMachine.Update();
         }
 
-        public void MoveToPosition(Vector3 position)
-        {
-            // 移动到指定位置：如果当前已处于移动状态，仅更新目标位置，避免重复进入导致动画重置
-            Target = null; // 清空目标对象，确保以目标点为准
-            TargetPosition = position;
-
-            if (stateMachine.CurrentStateType == typeof(Spell1_run))
-            {
-                return;
-            }
-
-            stateMachine.TransitionTo<MoveState>();
-        }
-
-        public void MoveToTarget(LOLGameObject target)
-        {
-            // 移动到指定目标
-            Target = target;
-            TargetPosition = Vector3.zero; // 清空目标位置，确保以目标对象为准
-
-            if (stateMachine.CurrentStateType == typeof(Spell1_run))
-            {
-                return;
-            }
-
-            stateMachine.TransitionTo<MoveState>();
-        }
-
         protected virtual void RegisterStates()
         {
             stateMachine.RegisterState(new DefaultState(stateMachine, this));
@@ -96,5 +68,86 @@ namespace LikeLoL04
         {
             stateMachine.TransitionTo<DefaultState>();
         }
+
+        // 移动速度（单位：单位/秒）
+        private float moveSpeed = 200f;
+
+        // 处理移动，返回是否到达停止距离
+        public bool HandleMoveToPosition()
+        {
+            Vector3 currentPos = transform.position;
+            float distance = Vector3.Distance(currentPos, TargetPosition);
+            if (distance <= 0.5f)
+            {
+                return true; // 已到达
+            }
+
+            Vector3 direction = (TargetPosition - currentPos).normalized;
+            Vector3 move = direction * moveSpeed * Time.deltaTime;
+            if (move.magnitude > distance)
+            {
+                move = direction * distance;
+            }
+            transform.position = currentPos + move;
+            return false;
+        }
+
+        public void InteractWithTarget(LOLGameObject target)
+        {
+            Target = target;
+            TargetPosition = target.transform.position;
+
+            if (stateMachine.CurrentStateType == typeof(DefaultState))
+            {
+                MoveToPosition(TargetPosition);
+            }
+        }
+
+        public void InteractWithPosition(Vector3 targetPos)
+        {
+            Target = null;
+            TargetPosition = targetPos;
+
+            if (stateMachine.CurrentStateType == typeof(DefaultState))
+            {
+                MoveToPosition(targetPos);
+            }
+        }
+
+        public void MoveToPosition(Vector3 targetPos)
+        {
+            TargetPosition = targetPos;
+
+            stateMachine.TransitionTo<MoveState>();
+        }
+        
+        // 普通平滑旋转：将前向 Z 轴朝向 targetPos（按固定角速度）
+        public void HandleRotation(Vector3 targetPos)
+        {
+            // 仅在水平面旋转（忽略高度差），更符合大多数 MOBA/ARPG 相机与角色设定
+            Vector3 lookDir = targetPos - transform.position;
+            lookDir.y = 0f;
+
+            // 目标方向过小则不旋转
+            if (lookDir.sqrMagnitude <= 1e-6f)
+                return;
+
+            Quaternion desired = Quaternion.LookRotation(lookDir, Vector3.up);
+
+            // 小角度直接对齐，避免抖动
+            float angle = Quaternion.Angle(transform.rotation, desired);
+            if (angle <= 0.1f)
+            {
+                transform.rotation = desired;
+                return;
+            }
+
+            // 使用固定角速度的方式进行旋转（度/秒）。
+            // 这里将 RotationDuration 解释为旋转 360° 约需要的时间，以获得直观可控的速度：
+            float degreesPerSecond = 360f / Mathf.Max(0.0001f, RotationDuration);
+            float maxStep = degreesPerSecond * Time.deltaTime;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, desired, maxStep);
+        }
+
     }
 }
