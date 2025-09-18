@@ -20,6 +20,12 @@ namespace LikeLoL04
         /// </summary>
         protected LOLGameObject selfLOLGameObject;
 
+        protected string animationName = "";
+        protected Action<StateMachine> onAnimationEnd = (stateMachine) =>
+        {
+            stateMachine.TransitionTo<DefaultState>();
+        };
+
         #endregion
 
         #region Constructor
@@ -53,7 +59,21 @@ namespace LikeLoL04
         /// </summary>
         public virtual void OnUpdate()
         {
-            // 子类实现具体的更新逻辑
+            int layer = 0;
+            // 动画过渡过程中先不判定结束，避免误判
+            if (animator.IsInTransition(layer)) return;
+
+            var stateInfo = animator.GetCurrentAnimatorStateInfo(layer);
+
+            if (animationName != "" && stateInfo.IsName(animationName))
+            {
+                // 非循环攻击动画在播放结束（normalizedTime >= 1）后回到默认状态
+                if (!stateInfo.loop && stateInfo.normalizedTime >= 1f)
+                {
+                    onAnimationEnd?.Invoke(stateMachine);
+                    return;
+                }
+            }
         }
 
         /// <summary>

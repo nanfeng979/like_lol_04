@@ -21,6 +21,11 @@ namespace LikeLoL04
         public AttackState(StateMachine stateMachine, LOLGameObject selfLOLGameObject)
             : base(stateMachine, selfLOLGameObject)
         {
+            animationName = "Attack";
+            onAnimationEnd = (sm) =>
+            {
+                sm.TransitionTo<DefaultState>();
+            };
         }
 
         #endregion
@@ -34,7 +39,7 @@ namespace LikeLoL04
             SetupFaceTargetTween();
 
             float dur = stateMachine.CurrentTransitionDuration;
-            animator.CrossFade("Attack", dur, -1, 0f);
+            animator.CrossFade(animationName, dur, -1, 0f);
         }
 
         public override void OnUpdate()
@@ -47,22 +52,6 @@ namespace LikeLoL04
                 faceRotationElapsed += Time.deltaTime;
                 float t = Mathf.Clamp01(faceRotationElapsed / faceRotationDuration);
                 selfLOLGameObject.transform.rotation = Quaternion.Slerp(faceInitialRot, faceTargetRot, t);
-            }
-
-            int layer = 0;
-            // 动画过渡过程中先不判定结束，避免误判
-            if (animator.IsInTransition(layer)) return;
-
-            var stateInfo = animator.GetCurrentAnimatorStateInfo(layer);
-
-            if (stateInfo.IsName("Attack"))
-            {
-                // 非循环攻击动画在播放结束（normalizedTime >= 1）后回到默认状态
-                if (!stateInfo.loop && stateInfo.normalizedTime >= 1f)
-                {
-                    stateMachine.TransitionTo<DefaultState>();
-                    return;
-                }
             }
         }
 
