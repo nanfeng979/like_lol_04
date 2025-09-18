@@ -35,7 +35,6 @@ namespace LikeLoL04
         public override void OnUpdate()
         {
             base.OnUpdate();
-
             LOLGameObject target = selfLOLGameObject.Target;
             // 若存在 Target 并且进入攻击范围，切换到 AttackState
             if (target != null)

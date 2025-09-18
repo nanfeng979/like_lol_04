@@ -43,6 +43,8 @@ namespace LikeLoL04
                 LOLGameObject lolGameObject = hit.collider.GetComponent<LOLGameObject>();
                 if (lolGameObject != null)
                 {
+                    if (lolGameObject == player)
+                        return; // 不与自己交互
                     player.InteractWithTarget(lolGameObject);
                     return;
                 }

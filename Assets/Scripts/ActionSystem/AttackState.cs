@@ -11,7 +11,7 @@ namespace LikeLoL04
     public class AttackState : BaseState
     {
         // 进入攻击时的短暂朝向过渡
-        private float faceRotationDuration = 0.1f;
+        private float faceRotationDuration = 0.05f;
         private float faceRotationElapsed = 0f;
         private Quaternion faceInitialRot;
         private Quaternion faceTargetRot;

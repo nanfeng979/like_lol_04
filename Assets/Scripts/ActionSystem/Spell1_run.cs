@@ -32,19 +32,19 @@ namespace LikeLoL04
         {
             base.OnUpdate();
 
-            if (!GameManager.Instance.mainPlayer.useQSkill)
-            {
-                if (selfLOLGameObject.HandleMoveToPosition())
-                {
-                    stateMachine.TransitionTo<DefaultState>();
-                }
-                else
-                {
-                    stateMachine.TransitionTo<MoveState>();
-                }
+            // if (!GameManager.Instance.mainPlayer.mainPlayer.useQSkill)
+            // {
+            //     if (selfLOLGameObject.HandleMoveToPosition())
+            //     {
+            //         stateMachine.TransitionTo<DefaultState>();
+            //     }
+            //     else
+            //     {
+            //         stateMachine.TransitionTo<MoveState>();
+            //     }
 
-                return;
-            }
+            //     return;
+            // }
 
             LOLGameObject target = selfLOLGameObject.Target;
             // 若存在 Target 并且进入攻击范围，切换到 AttackState
