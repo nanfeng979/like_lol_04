@@ -1,0 +1,47 @@
+using System;
+using UnityEngine;
+
+namespace LikeLoL04
+{
+    /// <summary>
+    /// 默认状态
+    /// </summary>
+    public class Spell1_default : DefaultState
+    {
+        #region Constructor
+
+        public Spell1_default(StateMachine stateMachine, LOLGameObject LOLGameObject)
+            : base(stateMachine, LOLGameObject)
+        {
+        }
+
+        #endregion
+
+        #region State Implementation
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            float dur = stateMachine.CurrentTransitionDuration;
+            animator.CrossFade("Default", dur, -1, 0f);
+        }
+        
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+        }
+        
+        public override void OnExit()
+        {
+            base.OnExit();
+        }
+
+        public override bool CanTransitionTo(Type targetState)
+        {
+            base.CanTransitionTo(targetState);
+            return true;
+        }
+        
+        #endregion
+    }
+}
