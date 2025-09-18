@@ -6,18 +6,13 @@ namespace LikeLoL04
     /// <summary>
     /// 默认状态
     /// </summary>
-    public class Attack2State : BaseState
+    public class BeAttack : BaseState
     {
         #region Constructor
 
-        public Attack2State(StateMachine stateMachine, LOLGameObject LOLGameObject)
+        public BeAttack(StateMachine stateMachine, LOLGameObject LOLGameObject)
             : base(stateMachine, LOLGameObject)
         {
-            animationName = "Attack2";
-            onAnimationEnd = (sm) =>
-            {
-                sm.TransitionTo<AttackState>();
-            };
         }
 
         #endregion
@@ -27,9 +22,8 @@ namespace LikeLoL04
         public override void OnEnter()
         {
             base.OnEnter();
-
             float dur = stateMachine.CurrentTransitionDuration;
-            animator.CrossFade(animationName, dur, -1, 0f);
+            animator.CrossFade("BeAttack", dur, -1, 0f);
         }
         
         public override void OnUpdate()

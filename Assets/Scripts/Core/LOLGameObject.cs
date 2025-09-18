@@ -99,7 +99,7 @@ namespace LikeLoL04
 
             if (stateMachine.CurrentStateType == typeof(DefaultState))
             {
-                MoveToPosition(TargetPosition);
+                stateMachine.TransitionTo<MoveState>();
             }
         }
 
@@ -110,15 +110,8 @@ namespace LikeLoL04
 
             if (stateMachine.CurrentStateType == typeof(DefaultState))
             {
-                MoveToPosition(targetPos);
+                stateMachine.TransitionTo<MoveState>();
             }
-        }
-
-        public void MoveToPosition(Vector3 targetPos)
-        {
-            TargetPosition = targetPos;
-
-            stateMachine.TransitionTo<MoveState>();
         }
 
         // 普通平滑旋转：将前向 Z 轴朝向 targetPos（按固定角速度）
@@ -155,6 +148,11 @@ namespace LikeLoL04
             if (target == null) return false;
             float distToTarget = Vector3.Distance(transform.position, target.transform.position);
             return distToTarget <= AttackRange;
+        }
+
+        public void BeAttack()
+        {
+            stateMachine.TransitionTo<BeAttack>();
         }
     }
 }

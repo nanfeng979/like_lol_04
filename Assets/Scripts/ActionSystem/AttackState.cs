@@ -24,7 +24,7 @@ namespace LikeLoL04
             animationName = "Attack";
             onAnimationEnd = (sm) =>
             {
-                sm.TransitionTo<DefaultState>();
+                stateMachine.TransitionTo<Attack2State>();
             };
         }
 

@@ -13,12 +13,13 @@ namespace LikeLoL04
 
             AttackRange = 200f;
             stateMachine.SetTransitionDuration<Attack2State, DefaultState>(0.08f);
+            stateMachine.SetTransitionDuration<AttackState, Attack2State>(0.08f);
         }
 
         protected override void Update()
         {
             base.Update();
-            
+
             // 按下 Q 键切换到 Spell1 状态
             if (Input.GetKeyDown(KeyCode.Q))
             {
@@ -62,18 +63,12 @@ namespace LikeLoL04
 
             if (stateMachine.CurrentStateType == typeof(Spell1_default) || stateMachine.CurrentStateType == typeof(Spell1_run))
             {
-                MoveToPosition(TargetPosition);
                 stateMachine.TransitionTo<Spell1_attack>();
             }
 
             if (stateMachine.CurrentStateType == typeof(DefaultState))
             {
-                MoveToPosition(TargetPosition);
-            }
-
-            if (stateMachine.CurrentStateType == typeof(AttackState))
-            {
-                stateMachine.TransitionTo<Attack2State>();
+                stateMachine.TransitionTo<MoveState>();
             }
         }
 
@@ -88,9 +83,14 @@ namespace LikeLoL04
                 return;
             }
 
-            if (stateMachine.CurrentStateType == typeof(DefaultState))
+            stateMachine.TransitionTo<MoveState>();
+        }
+
+        public void AttackTarget()
+        {
+            if (Target != null)
             {
-                MoveToPosition(targetPos);
+                Target.BeAttack();
             }
         }
     }
