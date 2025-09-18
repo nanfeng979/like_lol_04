@@ -21,7 +21,6 @@ namespace LikeLoL04
         public AttackState(StateMachine stateMachine, LOLGameObject selfLOLGameObject)
             : base(stateMachine, selfLOLGameObject)
         {
-            this.animator = selfLOLGameObject.animator;
         }
 
         #endregion

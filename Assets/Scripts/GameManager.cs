@@ -2,21 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace LikeLoL04
 {
-    public static GameManager Instance;
-
-    void Awake()
+    /// <summary>
+    /// 游戏管理器，负责全局游戏状态和对象的管理
+    /// </summary>
+    public class GameManager : MonoBehaviour
     {
-        if (Instance == null)
+        public static GameManager Instance;
+
+        void Awake()
         {
-            Instance = this;
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
         }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+
+        public LOLMainPlayer mainPlayer;
     }
-    
 }

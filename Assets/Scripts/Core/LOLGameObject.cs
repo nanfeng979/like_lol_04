@@ -92,7 +92,7 @@ namespace LikeLoL04
             return false;
         }
 
-        public void InteractWithTarget(LOLGameObject target)
+        public virtual void InteractWithTarget(LOLGameObject target)
         {
             Target = target;
             TargetPosition = target.transform.position;
@@ -103,7 +103,7 @@ namespace LikeLoL04
             }
         }
 
-        public void InteractWithPosition(Vector3 targetPos)
+        public virtual void InteractWithPosition(Vector3 targetPos)
         {
             Target = null;
             TargetPosition = targetPos;
@@ -120,7 +120,7 @@ namespace LikeLoL04
 
             stateMachine.TransitionTo<MoveState>();
         }
-        
+
         // 普通平滑旋转：将前向 Z 轴朝向 targetPos（按固定角速度）
         public void HandleRotation(Vector3 targetPos)
         {
@@ -149,5 +149,12 @@ namespace LikeLoL04
             transform.rotation = Quaternion.RotateTowards(transform.rotation, desired, maxStep);
         }
 
+        // 目标在攻击范围内
+        public bool IsTargetInAttackRange(LOLGameObject target)
+        {
+            if (target == null) return false;
+            float distToTarget = Vector3.Distance(transform.position, target.transform.position);
+            return distToTarget <= AttackRange;
+        }
     }
 }

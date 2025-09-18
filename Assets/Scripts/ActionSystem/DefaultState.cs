@@ -13,7 +13,6 @@ namespace LikeLoL04
         public DefaultState(StateMachine stateMachine, LOLGameObject LOLGameObject)
             : base(stateMachine, LOLGameObject)
         {
-            this.animator = LOLGameObject.animator;
         }
 
         #endregion

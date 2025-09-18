@@ -33,6 +33,7 @@ namespace LikeLoL04
         {
             this.stateMachine = stateMachine;
             this.selfLOLGameObject = LOLGameObject;
+            this.animator = LOLGameObject.animator;
         }
 
         #endregion
@@ -90,8 +91,5 @@ namespace LikeLoL04
         #endregion
 
         protected Animator animator;
-        
-        // 动画过渡时间（秒）
-        protected float animationTransitionDuration = 0.25f;
     }
 }
