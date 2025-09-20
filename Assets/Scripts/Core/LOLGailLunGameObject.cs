@@ -45,18 +45,12 @@ namespace LikeLoL04
 
         public override void InteractWithTarget(LOLGameObject target)
         {
-            Target = target;
-            TargetPosition = target.transform.position;
-
-            stateMachine.TransitionTo(MoveStateId);
+            base.InteractWithTarget(target);
         }
 
         public override void InteractWithPosition(Vector3 targetPos)
         {
-            Target = null;
-            TargetPosition = targetPos;
-
-            stateMachine.TransitionTo(MoveStateId);
+            base.InteractWithPosition(targetPos);
         }
 
         public void AttackTarget()

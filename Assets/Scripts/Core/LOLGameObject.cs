@@ -71,6 +71,7 @@ namespace LikeLoL04
             base.Update();
 
             stateMachine.Update();
+
             buffManager.Update(Time.deltaTime);
         }
 
@@ -83,7 +84,7 @@ namespace LikeLoL04
 
         protected virtual void SetDefaultState()
         {
-            stateMachine.TransitionTo("DefaultState");
+            stateMachine.TransitionTo(DefaultStateId);
         }
 
         // 移动速度（单位：单位/秒）
@@ -114,9 +115,9 @@ namespace LikeLoL04
             Target = target;
             TargetPosition = target.transform.position;
 
-            if (stateMachine.CurrentStateId == "DefaultState")
+            if (stateMachine.CurrentStateId == DefaultStateId)
             {
-                stateMachine.TransitionTo("MoveState");
+                stateMachine.TransitionTo(MoveStateId);
             }
         }
 
@@ -125,9 +126,9 @@ namespace LikeLoL04
             Target = null;
             TargetPosition = targetPos;
 
-            if (stateMachine.CurrentStateId == "DefaultState")
+            if (stateMachine.CurrentStateId == DefaultStateId || stateMachine.CurrentStateId == AttackStateId)
             {
-                stateMachine.TransitionTo("MoveState");
+                stateMachine.TransitionTo(MoveStateId);
             }
         }
 
@@ -172,6 +173,9 @@ namespace LikeLoL04
             // 若存在 Target 并且进入攻击范围，切换到 AttackState
             if (IsTargetInAttackRange(Target))
             {
+                if (stateMachine.CurrentStateId == AttackStateId)
+                    return;
+
                 stateMachine.TransitionTo(AttackStateId);
                 return;
             }
