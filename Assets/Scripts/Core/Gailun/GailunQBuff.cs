@@ -15,6 +15,7 @@ namespace LikeLoL04
         {
             base.OnApply();
             owner.MoveStateId = "Spell1_run";
+            owner.AttackStateId = "Spell1_attack";
         }
 
         public override void OnUpdate(float deltaTime)
@@ -26,7 +27,8 @@ namespace LikeLoL04
         {
             base.OnRemove();
             owner.MoveStateId = "MoveState";
-            owner.StateMachine.TransitionTo(owner.MoveStateId);
+            owner.AttackStateId = "AttackState";
+            owner.StateMachine.TransitionTo(owner.DefaultStateId);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace LikeLoL04
 
             DefaultStateId = "DefaultState";
             MoveStateId = "MoveState";
+            AttackStateId = "AttackState";
 
             AttackRange = 200f;
             stateMachine.SetTransitionDuration("Attack2State", "DefaultState", 0.08f);
@@ -27,9 +28,6 @@ namespace LikeLoL04
             // 按下 Q 键切换到 Spell1 状态
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                // stateMachine.TransitionTo("Spell1_default");
-                // useQSkill = true;
-                // qSkillTimer = 0f;
                 BuffList.Add(new GailunQBuff(this));
                 BuffList[0].OnApply();
             }
@@ -38,18 +36,7 @@ namespace LikeLoL04
                 stateMachine.TransitionTo("Spell3");
             }
 
-            // 处理 Q 技能持续时间
-            if (useQSkill)
-            {
-                qSkillTimer += Time.deltaTime;
-                if (qSkillTimer >= qSkillDuration)
-                {
-                    useQSkill = false;
-                    qSkillTimer = 0f;
-                }
-            }
-
-            if (stateMachine.CurrentStateId == "MoveState" && Target != null)
+            if (stateMachine.CurrentStateId == MoveStateId && Target != null)
             {
                 AttackTargetListener();
             }
@@ -62,7 +49,7 @@ namespace LikeLoL04
             stateMachine.RegisterState("AttackState", new AttackStateV2(stateMachine, this));
             stateMachine.RegisterState("Attack2State", new Attack2StateV2(stateMachine, this));
             // stateMachine.RegisterState(new Spell1_default(stateMachine, this));
-            // stateMachine.RegisterState(new Spell1_attack(stateMachine, this));
+            stateMachine.RegisterState("Spell1_attack", new Spell1_attackV2(stateMachine, this));
             stateMachine.RegisterState("Spell1_run", new Spell1_runV2(stateMachine, this));
             // stateMachine.RegisterState(new Spell3(stateMachine, this));
         }
@@ -77,9 +64,9 @@ namespace LikeLoL04
             //     stateMachine.TransitionTo("Spell1_attack");
             // }
 
-            if (stateMachine.CurrentStateId == "DefaultState")
+            if (stateMachine.CurrentStateId == DefaultStateId)
             {
-                stateMachine.TransitionTo("MoveState");
+                stateMachine.TransitionTo(MoveStateId);
             }
         }
 

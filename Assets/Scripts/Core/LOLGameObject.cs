@@ -23,6 +23,7 @@ namespace LikeLoL04
 
         public string DefaultStateId = "DefaultState";
         public string MoveStateId = "MoveState";
+        public string AttackStateId = "AttackState";
 
         /// <summary>
         /// 目标
@@ -189,7 +190,7 @@ namespace LikeLoL04
             // 若存在 Target 并且进入攻击范围，切换到 AttackState
             if (IsTargetInAttackRange(Target))
             {
-                stateMachine.TransitionTo("AttackState");
+                stateMachine.TransitionTo(AttackStateId);
                 return;
             }
         }

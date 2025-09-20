@@ -1,0 +1,95 @@
+using System;
+using UnityEngine;
+
+namespace LikeLoL04
+{
+    /// <summary>
+    /// 默认状态
+    /// </summary>
+    public class Spell1_attackV2 : BaseStateV2
+    {
+
+        // 进入攻击时的短暂朝向过渡
+        private float faceRotationDuration = 0.1f;
+        private float faceRotationElapsed = 0f;
+        private Quaternion faceInitialRot;
+        private Quaternion faceTargetRot;
+
+        #region Constructor
+
+        public Spell1_attackV2(StateMachineV2 stateMachine, LOLGameObject LOLGameObject)
+            : base(stateMachine, LOLGameObject)
+        {
+            this.animator = LOLGameObject.animator;
+        }
+
+        #endregion
+
+        #region State Implementation
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            // 进入攻击状态时设置一个短暂的朝向过渡（水平朝向）
+            SetupFaceTargetTween();
+            
+            float dur = stateMachine.CurrentTransitionDuration;
+            animator.CrossFade("Spell1", dur, -1, 0f);
+        }
+
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+        }
+
+        public override bool CanTransitionTo(Type targetState)
+        {
+            base.CanTransitionTo(targetState);
+            return true;
+        }
+
+        #endregion
+        
+        // 准备进入攻击时的朝向过渡参数（仅水平旋转）
+        private void SetupFaceTargetTween()
+        {
+            Vector3? targetPos = null;
+            if (selfLOLGameObject.Target != null)
+            {
+                targetPos = selfLOLGameObject.Target.transform.position;
+            }
+            else if (selfLOLGameObject.TargetPosition != Vector3.zero)
+            {
+                targetPos = selfLOLGameObject.TargetPosition;
+            }
+
+            faceRotationElapsed = 0f;
+            faceRotationDuration = Mathf.Max(0.01f, selfLOLGameObject.RotationDuration);
+            faceInitialRot = selfLOLGameObject.transform.rotation;
+
+            if (!targetPos.HasValue)
+            {
+                faceTargetRot = faceInitialRot;
+                return;
+            }
+
+            Vector3 currentPos = selfLOLGameObject.transform.position;
+            Vector3 lookDir = (targetPos.Value - currentPos);
+            lookDir.y = 0f; // 仅水平朝向
+
+            if (lookDir.sqrMagnitude < 0.0001f)
+            {
+                faceTargetRot = faceInitialRot;
+                return;
+            }
+
+            faceTargetRot = Quaternion.LookRotation(lookDir.normalized, Vector3.up);
+        }
+        
+    }
+}

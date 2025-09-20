@@ -38,7 +38,7 @@ namespace LikeLoL04
 
             if (selfLOLGameObject.HandleMoveToPosition())
             {
-                stateMachine.TransitionTo("DefaultState");
+                stateMachine.TransitionTo(selfLOLGameObject.DefaultStateId);
                 return;
             }
 
