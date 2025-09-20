@@ -163,6 +163,16 @@ namespace LikeLoL04
             return distToTarget <= AttackRange;
         }
 
+        public void AttackTargetListener()
+        {
+            // 若存在 Target 并且进入攻击范围，切换到 AttackState
+            if (IsTargetInAttackRange(Target))
+            {
+                stateMachine.TransitionTo("AttackState");
+                return;
+            }
+        }
+
         public void BeAttack()
         {
             stateMachine.TransitionTo("BeAttack");

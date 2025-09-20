@@ -35,22 +35,6 @@ namespace LikeLoL04
         public override void OnUpdate()
         {
             base.OnUpdate();
-            LOLGameObject target = selfLOLGameObject.Target;
-            // 若存在 Target 并且进入攻击范围，切换到 AttackState
-            if (target != null)
-            {
-                if (selfLOLGameObject.IsTargetInAttackRange(target))
-                {
-                    stateMachine.TransitionTo("AttackState");
-                    return;
-                }
-            }
-
-            // 计算目标位置（以目标的 Transform 为准）
-            Vector3 targetPos = selfLOLGameObject.TargetPosition;
-
-            // 处理旋转
-            selfLOLGameObject.HandleRotation(targetPos);
 
             if (selfLOLGameObject.HandleMoveToPosition())
             {
@@ -58,6 +42,8 @@ namespace LikeLoL04
                 return;
             }
 
+            // 处理旋转
+            selfLOLGameObject.HandleRotation(selfLOLGameObject.TargetPosition);
         }
 
         public override void OnExit()

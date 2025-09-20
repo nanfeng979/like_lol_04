@@ -43,6 +43,11 @@ namespace LikeLoL04
                     qSkillTimer = 0f;
                 }
             }
+
+            if (stateMachine.CurrentStateId == "MoveState" && Target != null)
+            {
+                AttackTargetListener();
+            }
         }
 
         protected override void RegisterStates()
