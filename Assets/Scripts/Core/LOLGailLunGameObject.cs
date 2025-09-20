@@ -12,6 +12,9 @@ namespace LikeLoL04
         {
             base.Start();
 
+            DefaultStateId = "DefaultState";
+            MoveStateId = "MoveState";
+
             AttackRange = 200f;
             stateMachine.SetTransitionDuration("Attack2State", "DefaultState", 0.08f);
             stateMachine.SetTransitionDuration("AttackState", "Attack2State", 0.08f);
@@ -24,9 +27,11 @@ namespace LikeLoL04
             // 按下 Q 键切换到 Spell1 状态
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                stateMachine.TransitionTo("Spell1_default");
-                useQSkill = true;
-                qSkillTimer = 0f;
+                // stateMachine.TransitionTo("Spell1_default");
+                // useQSkill = true;
+                // qSkillTimer = 0f;
+                BuffList.Add(new GailunQBuff(this));
+                BuffList[0].OnApply();
             }
             else if (Input.GetKeyDown(KeyCode.E))
             {
@@ -58,7 +63,7 @@ namespace LikeLoL04
             stateMachine.RegisterState("Attack2State", new Attack2StateV2(stateMachine, this));
             // stateMachine.RegisterState(new Spell1_default(stateMachine, this));
             // stateMachine.RegisterState(new Spell1_attack(stateMachine, this));
-            // stateMachine.RegisterState(new Spell1_run(stateMachine, this));
+            stateMachine.RegisterState("Spell1_run", new Spell1_runV2(stateMachine, this));
             // stateMachine.RegisterState(new Spell3(stateMachine, this));
         }
 
@@ -89,7 +94,11 @@ namespace LikeLoL04
             //     return;
             // }
 
-            stateMachine.TransitionTo("MoveState");
+            if (stateMachine.CurrentStateId == DefaultStateId)
+            {
+                Debug.Log("Transition to MoveState : " + MoveStateId);
+                stateMachine.TransitionTo(MoveStateId);
+            }
         }
 
         public void AttackTarget()

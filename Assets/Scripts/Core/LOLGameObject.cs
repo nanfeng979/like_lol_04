@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LikeLoL04
@@ -17,6 +18,11 @@ namespace LikeLoL04
         /// 状态机
         /// </summary>
         protected StateMachineV2 stateMachine;
+
+        public StateMachineV2 StateMachine => stateMachine;
+
+        public string DefaultStateId = "DefaultState";
+        public string MoveStateId = "MoveState";
 
         /// <summary>
         /// 目标
@@ -38,6 +44,8 @@ namespace LikeLoL04
         [SerializeField]
         public float AttackRange = 200f;
 
+        public List<Buff> BuffList { get; private set; } = new List<Buff>();
+
         protected override void Start()
         {
             base.Start();
@@ -58,6 +66,19 @@ namespace LikeLoL04
             base.Update();
 
             stateMachine.Update();
+
+            for (int i = 0; i < BuffList.Count; i++)
+            {
+                Buff buff = BuffList[i];
+                buff.OnUpdate(Time.deltaTime);
+
+                if (buff.IsExpired())
+                {
+                    buff.OnRemove();
+                    BuffList.RemoveAt(i);
+                    i--;
+                }
+            }
         }
 
         protected virtual void RegisterStates()
