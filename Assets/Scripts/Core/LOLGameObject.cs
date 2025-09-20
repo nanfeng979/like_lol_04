@@ -1,4 +1,5 @@
 
+using System;
 using UnityEngine;
 
 namespace LikeLoL04
@@ -15,7 +16,7 @@ namespace LikeLoL04
         /// <summary>
         /// 状态机
         /// </summary>
-        protected StateMachine stateMachine;
+        protected StateMachineV2 stateMachine;
 
         /// <summary>
         /// 目标
@@ -42,14 +43,14 @@ namespace LikeLoL04
             base.Start();
             animator = GetComponent<Animator>();
 
-            stateMachine = new StateMachine();
+            stateMachine = new StateMachineV2();
             RegisterStates();
 
             // 初始状态设为待机
             SetDefaultState();
 
             // 配置 Attack -> Default 的过渡时长（未配置的其他过渡将使用状态机默认值）
-            stateMachine.SetTransitionDuration<AttackState, DefaultState>(0.12f);
+            stateMachine.SetTransitionDuration("AttackState", "DefaultState", 0.12f);
         }
 
         protected override void Update()
@@ -61,12 +62,24 @@ namespace LikeLoL04
 
         protected virtual void RegisterStates()
         {
-            stateMachine.RegisterState(new DefaultState(stateMachine, this));
+            // 使用字符串ID注册状态
+            var defaultState = new LikeLoL04.DefaultStateV2(stateMachine, this);
+            stateMachine.RegisterState("DefaultState", defaultState);
+            
+            // 暂时只注册默认状态，其他状态可以后续添加
+            // var moveState = new MoveStateV2(stateMachine, this);
+            // stateMachine.RegisterState("MoveState", moveState);
+            // var attackState = new AttackStateV2(stateMachine, this);
+            // stateMachine.RegisterState("AttackState", attackState);
+            // var attack2State = new Attack2StateV2(stateMachine, this);
+            // stateMachine.RegisterState("Attack2State", attack2State);
+            // var beAttackState = new BeAttackV2(stateMachine, this);
+            // stateMachine.RegisterState("BeAttack", beAttackState);
         }
 
         protected virtual void SetDefaultState()
         {
-            stateMachine.TransitionTo<DefaultState>();
+            stateMachine.TransitionTo("DefaultState");
         }
 
         // 移动速度（单位：单位/秒）
@@ -97,9 +110,9 @@ namespace LikeLoL04
             Target = target;
             TargetPosition = target.transform.position;
 
-            if (stateMachine.CurrentStateType == typeof(DefaultState))
+            if (stateMachine.CurrentStateId == "DefaultState")
             {
-                stateMachine.TransitionTo<MoveState>();
+                stateMachine.TransitionTo("MoveState");
             }
         }
 
@@ -108,9 +121,9 @@ namespace LikeLoL04
             Target = null;
             TargetPosition = targetPos;
 
-            if (stateMachine.CurrentStateType == typeof(DefaultState))
+            if (stateMachine.CurrentStateId == "DefaultState")
             {
-                stateMachine.TransitionTo<MoveState>();
+                stateMachine.TransitionTo("MoveState");
             }
         }
 
@@ -152,7 +165,8 @@ namespace LikeLoL04
 
         public void BeAttack()
         {
-            stateMachine.TransitionTo<BeAttack>();
+            stateMachine.TransitionTo("BeAttack");
         }
+
     }
 }

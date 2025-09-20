@@ -1,0 +1,77 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace LikeLoL04
+{
+    /// <summary>
+    /// 移动状态V2，适配StateMachineV2
+    /// </summary>
+    public class MoveStateV2 : BaseStateV2
+    {
+
+        #region Constructor
+
+        public MoveStateV2(StateMachineV2 stateMachine, LOLGameObject LOLGameObject)
+            : base(stateMachine, LOLGameObject)
+        {
+        }
+
+        #endregion
+
+        #region State Implementation
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            if (selfLOLGameObject.animator != null)
+            {
+                float dur = stateMachine.CurrentTransitionDuration;
+                selfLOLGameObject.animator.CrossFade("Move", dur, -1, 0f);
+            }
+        }
+
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+            LOLGameObject target = selfLOLGameObject.Target;
+            // 若存在 Target 并且进入攻击范围，切换到 AttackState
+            if (target != null)
+            {
+                if (selfLOLGameObject.IsTargetInAttackRange(target))
+                {
+                    stateMachine.TransitionTo("AttackState");
+                    return;
+                }
+            }
+
+            // 计算目标位置（以目标的 Transform 为准）
+            Vector3 targetPos = selfLOLGameObject.TargetPosition;
+
+            // 处理旋转
+            selfLOLGameObject.HandleRotation(targetPos);
+
+            if (selfLOLGameObject.HandleMoveToPosition())
+            {
+                stateMachine.TransitionTo("DefaultState");
+                return;
+            }
+
+        }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+        }
+
+        public override bool CanTransitionTo(Type targetState)
+        {
+            return targetState.Name != "MoveStateV2";
+        }
+
+        #endregion
+
+    }
+
+}

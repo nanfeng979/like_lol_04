@@ -1,0 +1,47 @@
+using System;
+using UnityEngine;
+
+namespace LikeLoL04
+{
+    /// <summary>
+    /// 被攻击状态V2，适配StateMachineV2
+    /// </summary>
+    public class BeAttackV2 : BaseStateV2
+    {
+        #region Constructor
+
+        public BeAttackV2(StateMachineV2 stateMachine, LOLGameObject LOLGameObject)
+            : base(stateMachine, LOLGameObject)
+        {
+        }
+
+        #endregion
+
+        #region State Implementation
+
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            float dur = stateMachine.CurrentTransitionDuration;
+            animator.CrossFade("BeAttack", dur, -1, 0f);
+        }
+        
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+        }
+        
+        public override void OnExit()
+        {
+            base.OnExit();
+        }
+
+        public override bool CanTransitionTo(Type targetState)
+        {
+            base.CanTransitionTo(targetState);
+            return true;
+        }
+        
+        #endregion
+    }
+}
