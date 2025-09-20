@@ -23,6 +23,8 @@ namespace LikeLoL04
         private Action<float> luaOnUpdate;
         private Func<string, bool> luaCanTransitionTo; // 参数是目标状态 ID（字符串），更贴近日志与扩展
 
+        internal static float lastGCTime = 0;
+        internal const float GCInterval = 1;
         protected bool luaLoaded = false;
 
         public LuaStateV2(StateMachineV2 stateMachine, LOLGameObject obj, string luaFileName)
@@ -64,6 +66,8 @@ namespace LikeLoL04
                 meta.Set("__index", luaEnv.Global);
                 luaEnvTable.SetMetaTable(meta);
                 meta.Dispose();
+
+                luaEnv.DoString("print = function(...) CS.UnityEngine.Debug.Log(table.concat({...}, ' ')) end");
 
                 // 先注入上下文（脚本内可直接使用 global self / stateId）
                 luaEnvTable.Set("self", selfLOLGameObject);
@@ -112,6 +116,12 @@ namespace LikeLoL04
             base.OnUpdate();
             if (!luaLoaded) return;
             luaOnUpdate?.Invoke(Time.deltaTime);
+
+            if (Time.time - lastGCTime > GCInterval)
+            {
+                luaEnv.Tick();
+                lastGCTime = Time.time;
+            }
         }
 
         public override void OnExit()
