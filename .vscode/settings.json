@@ -51,5 +51,9 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "like_lol_04.sln"
+    "dotnet.defaultSolution": "like_lol_04.sln",
+    "files.associations": {
+        "*lua.txt": "lua",
+        "*.md": "markdown"
+    },
 }

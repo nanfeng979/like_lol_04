@@ -50,7 +50,7 @@ namespace LikeLoL04
             try
             {
                 // 读取 Resources/lua/<file>.txt
-                string path = $"lua/{luaFileName}"; // Resources 下的相对路径（不含后缀）
+                string path = $"lua/{luaFileName}.lua"; // Resources 下的相对路径（不含后缀）
                 TextAsset ta = Resources.Load<TextAsset>(path);
                 if (ta == null)
                 {

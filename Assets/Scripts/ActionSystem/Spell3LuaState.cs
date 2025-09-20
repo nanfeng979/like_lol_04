@@ -12,7 +12,6 @@ namespace LikeLoL04
             : base(sm, obj, "spell3") // 文件名（不含路径与后缀）
         {
             animationName = "Spell3"; // 若需要可由 lua 覆盖
-            Debug.Log("obj in Spell3LuaState ctor: " + obj.Name);
         }
 
         public override void OnEnter()
@@ -24,8 +23,6 @@ namespace LikeLoL04
                 float dur = stateMachine.CurrentTransitionDuration;
                 animator.CrossFade(animationName, dur, -1, 0f);
             }
-
-            Debug.Log("self: " + selfLOLGameObject.Name);
         }
     }
 }

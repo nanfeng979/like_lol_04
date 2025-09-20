@@ -1,0 +1,26 @@
+-- spell3.txt
+-- 返回一个 table，提供状态生命周期函数
+-- 通过 LuaStateV2 注入的变量：
+-- self : C# LOLGameObject 实例
+-- stateId : 该状态 ID
+
+local M = {}
+
+function M.OnEnter()
+    M.elapsed = 0
+end
+
+function M.OnUpdate(dt)
+    M.elapsed = M.elapsed + dt
+
+    self:HandleMoveToPosition();
+end
+
+function M.OnExit()
+end
+
+function M.CanTransitionTo(targetStateId)
+    return true
+end
+
+return M
