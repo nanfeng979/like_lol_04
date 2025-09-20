@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,12 +16,19 @@ namespace LikeLoL04
         /// 状态机
         /// </summary>
         protected StateMachineV2 stateMachine;
-
         public StateMachineV2 StateMachine => stateMachine;
 
         public string DefaultStateId = "DefaultState";
         public string MoveStateId = "MoveState";
         public string AttackStateId = "AttackState";
+
+        /// <summary>
+        /// Buff 管理器
+        /// </summary>
+        private BuffManager buffManager;
+        public BuffManager BuffManager => buffManager;
+        // 兼容旧代码：只读暴露 BuffList（内部来自 BuffManager）
+        public IReadOnlyList<Buff> BuffList => buffManager?.Buffs;
 
         /// <summary>
         /// 目标
@@ -44,14 +50,13 @@ namespace LikeLoL04
         [SerializeField]
         public float AttackRange = 200f;
 
-        public List<Buff> BuffList { get; private set; } = new List<Buff>();
-
         protected override void Start()
         {
             base.Start();
             animator = GetComponent<Animator>();
 
             stateMachine = new StateMachineV2();
+            buffManager = new BuffManager(this);
             RegisterStates();
 
             // 初始状态设为待机
@@ -66,19 +71,7 @@ namespace LikeLoL04
             base.Update();
 
             stateMachine.Update();
-
-            for (int i = 0; i < BuffList.Count; i++)
-            {
-                Buff buff = BuffList[i];
-                buff.OnUpdate(Time.deltaTime);
-
-                if (buff.IsExpired())
-                {
-                    buff.OnRemove();
-                    BuffList.RemoveAt(i);
-                    i--;
-                }
-            }
+            buffManager.Update(Time.deltaTime);
         }
 
         protected virtual void RegisterStates()
@@ -189,5 +182,12 @@ namespace LikeLoL04
             stateMachine.TransitionTo("BeAttack");
         }
 
+        // ==== BuffManager 便捷封装 ==== //
+        public T AddBuff<T>(T buff) where T : Buff => buffManager.Add(buff);
+        public T AddBuff<T>() where T : Buff => buffManager.Add<T>();
+        public bool RemoveBuff<T>() where T : Buff => buffManager.Remove<T>();
+        public bool HasBuff<T>() where T : Buff => buffManager.Has<T>();
+        public T GetBuff<T>() where T : Buff => buffManager.Get<T>();
+        public void ClearBuffs() => buffManager.Clear();
     }
 }

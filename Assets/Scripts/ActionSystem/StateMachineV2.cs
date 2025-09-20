@@ -81,7 +81,7 @@ namespace LikeLoL04
 
             if (stateDict.ContainsKey(stateId))
             {
-                Debug.LogWarning($"状态 {stateId} 已经注册，将覆盖原有状态");
+                // Debug.LogWarning($"状态 {stateId} 已经注册，将覆盖原有状态");
             }
             stateDict[stateId] = state;
         }
@@ -149,7 +149,6 @@ namespace LikeLoL04
             currentState = stateDict[stateId];
             currentState.OnEnter();
 
-            // Debug.Log($"状态切换: {stateId}");
             return true;
         }
 

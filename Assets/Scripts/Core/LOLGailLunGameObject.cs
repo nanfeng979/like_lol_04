@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 namespace LikeLoL04
 {
@@ -21,11 +20,9 @@ namespace LikeLoL04
         {
             base.Update();
 
-            // 按下 Q 键切换到 Spell1 状态
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                BuffList.Add(new GailunQBuff(this));
-                BuffList[0].OnApply();
+                BuffManager.Add(new GailunQBuff(this));
             }
             else if (Input.GetKeyDown(KeyCode.E))
             {
@@ -44,8 +41,6 @@ namespace LikeLoL04
             stateMachine.RegisterState("MoveState", new MoveStateV2(stateMachine, this));
             stateMachine.RegisterState("AttackState", new AttackStateV2(stateMachine, this));
             stateMachine.RegisterState("Attack2State", new Attack2StateV2(stateMachine, this));
-            stateMachine.RegisterState("Spell1_attack", new Spell1_attackV2(stateMachine, this));
-            stateMachine.RegisterState("Spell1_run", new Spell1_runV2(stateMachine, this));
         }
 
         public override void InteractWithTarget(LOLGameObject target)
@@ -53,10 +48,7 @@ namespace LikeLoL04
             Target = target;
             TargetPosition = target.transform.position;
 
-            if (stateMachine.CurrentStateId == DefaultStateId)
-            {
-                stateMachine.TransitionTo(MoveStateId);
-            }
+            stateMachine.TransitionTo(MoveStateId);
         }
 
         public override void InteractWithPosition(Vector3 targetPos)
@@ -64,10 +56,7 @@ namespace LikeLoL04
             Target = null;
             TargetPosition = targetPos;
 
-            if (stateMachine.CurrentStateId == DefaultStateId)
-            {
-                stateMachine.TransitionTo(MoveStateId);
-            }
+            stateMachine.TransitionTo(MoveStateId);
         }
 
         public void AttackTarget()
