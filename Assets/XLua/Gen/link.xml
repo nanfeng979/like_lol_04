@@ -1,0 +1,24 @@
+﻿
+
+<linker>
+
+	<assembly fullname="Assembly-CSharp">
+	    <type fullname="Tutorial.BaseClass" preserve="all"/>
+		<type fullname="Tutorial.TestEnum" preserve="all"/>
+		<type fullname="Tutorial.DerivedClass" preserve="all"/>
+		<type fullname="Tutorial.ICalc" preserve="all"/>
+		<type fullname="Tutorial.DerivedClassExtensions" preserve="all"/>
+		<type fullname="LikeLoL04.LOLGameObject" preserve="all"/>
+		<type fullname="LikeLoL04.StateMachineV2" preserve="all"/>
+		<type fullname="Tutorial.DerivedClass+TestEnumInner" preserve="all"/>
+		
+	</assembly>
+
+	<assembly fullname="UnityEngine.CoreModule">
+	    <type fullname="UnityEngine.Vector3" preserve="all"/>
+		<type fullname="UnityEngine.Quaternion" preserve="all"/>
+		<type fullname="UnityEngine.Transform" preserve="all"/>
+		
+	</assembly>
+
+</linker>

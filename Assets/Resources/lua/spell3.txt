@@ -1,0 +1,51 @@
+-- spell3.txt
+-- 返回一个 table，提供状态生命周期函数
+-- 通过 LuaStateV2 注入的变量：
+-- self : C# LOLGameObject 实例
+-- stateId : 该状态 ID （这里是 spell3）
+
+local M = {}
+
+-- 可配置：技能持续时间 / 计时器
+M.elapsed = 0
+M.duration = 6  -- 例：1.2 秒后自动回默认状态
+
+function M.OnEnter()
+    -- 进入技能：可以做特效、初始化数据等
+    M.elapsed = 0
+    -- 示例：打印日志
+    print('[Lua] spell3 OnEnter, target=', self and self.name or 'nil')
+end
+
+function M.OnUpdate(dt)
+    M.elapsed = M.elapsed + dt
+    -- 示例：允许在施法时保持面向目标（若有）
+    if self and self.Target then
+        -- 简易朝向（水平）
+        local targetPos = self.Target.transform.position
+        local myPos = self.transform.position
+        targetPos.y = myPos.y
+
+    end
+
+    self:HandleMoveToPosition()
+
+    if M.elapsed >= M.duration then
+        -- 回到默认状态
+        self.StateMachine:TransitionTo('DefaultState')
+    end
+end
+
+function M.OnExit()
+    print('[Lua] spell3 OnExit')
+end
+
+function M.CanTransitionTo(targetStateId)
+    -- 例：施放后 0.3 秒内不允许再次进入攻击类状态
+    if targetStateId == 'AttackState' and M.elapsed < 0.3 then
+        return false
+    end
+    return true
+end
+
+return M

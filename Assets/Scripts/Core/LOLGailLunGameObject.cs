@@ -41,6 +41,7 @@ namespace LikeLoL04
             stateMachine.RegisterState("MoveState", new MoveStateV2(stateMachine, this));
             stateMachine.RegisterState("AttackState", new AttackStateV2(stateMachine, this));
             stateMachine.RegisterState("Attack2State", new Attack2StateV2(stateMachine, this));
+            stateMachine.RegisterState("Spell3", new Spell3LuaState(stateMachine, this));
         }
 
         public override void InteractWithTarget(LOLGameObject target)
