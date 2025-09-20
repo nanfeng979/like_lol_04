@@ -4,10 +4,6 @@ namespace LikeLoL04
 {
     public class LOLGailLunGameObject : LOLGameObject
     {
-        private bool useQSkill = false;
-        private float qSkillTimer = 0f;
-        private float qSkillDuration = 10f;
-
         protected override void Start()
         {
             base.Start();
@@ -48,21 +44,14 @@ namespace LikeLoL04
             stateMachine.RegisterState("MoveState", new MoveStateV2(stateMachine, this));
             stateMachine.RegisterState("AttackState", new AttackStateV2(stateMachine, this));
             stateMachine.RegisterState("Attack2State", new Attack2StateV2(stateMachine, this));
-            // stateMachine.RegisterState(new Spell1_default(stateMachine, this));
             stateMachine.RegisterState("Spell1_attack", new Spell1_attackV2(stateMachine, this));
             stateMachine.RegisterState("Spell1_run", new Spell1_runV2(stateMachine, this));
-            // stateMachine.RegisterState(new Spell3(stateMachine, this));
         }
 
         public override void InteractWithTarget(LOLGameObject target)
         {
             Target = target;
             TargetPosition = target.transform.position;
-
-            // if (stateMachine.CurrentStateId == "Spell1_default" || stateMachine.CurrentStateId == "Spell1_run")
-            // {
-            //     stateMachine.TransitionTo("Spell1_attack");
-            // }
 
             if (stateMachine.CurrentStateId == DefaultStateId)
             {
@@ -75,15 +64,8 @@ namespace LikeLoL04
             Target = null;
             TargetPosition = targetPos;
 
-            // if (stateMachine.CurrentStateType == typeof(Spell1_default))
-            // {
-            //     stateMachine.TransitionTo<Spell1_run>();
-            //     return;
-            // }
-
             if (stateMachine.CurrentStateId == DefaultStateId)
             {
-                Debug.Log("Transition to MoveState : " + MoveStateId);
                 stateMachine.TransitionTo(MoveStateId);
             }
         }

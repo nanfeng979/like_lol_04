@@ -1,5 +1,4 @@
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -87,16 +86,6 @@ namespace LikeLoL04
             // 使用字符串ID注册状态
             var defaultState = new LikeLoL04.DefaultStateV2(stateMachine, this);
             stateMachine.RegisterState("DefaultState", defaultState);
-            
-            // 暂时只注册默认状态，其他状态可以后续添加
-            // var moveState = new MoveStateV2(stateMachine, this);
-            // stateMachine.RegisterState("MoveState", moveState);
-            // var attackState = new AttackStateV2(stateMachine, this);
-            // stateMachine.RegisterState("AttackState", attackState);
-            // var attack2State = new Attack2StateV2(stateMachine, this);
-            // stateMachine.RegisterState("Attack2State", attack2State);
-            // var beAttackState = new BeAttackV2(stateMachine, this);
-            // stateMachine.RegisterState("BeAttack", beAttackState);
         }
 
         protected virtual void SetDefaultState()
