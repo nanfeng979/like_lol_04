@@ -51,12 +51,21 @@ namespace LikeLoL04
             luaEnv = GetEnv();
             try
             {
-                // 读取 Resources/lua/<file>.txt
-                string path = $"lua/{luaFileName}.lua"; // Resources 下的相对路径（不含后缀）
-                TextAsset ta = Resources.Load<TextAsset>(path);
+                // 读取 Resources/lua/<file>（不强制扩展名，先尝试原名，再尝试 .lua / .txt 兼容）
+                TextAsset ta = null;
+                string basePath = $"lua/{luaFileName}"; // Resources 下相对路径（不含扩展）
+                ta = Resources.Load<TextAsset>(basePath);
                 if (ta == null)
                 {
-                    Debug.LogError($"LuaStateV2 加载失败: 未找到 {path}.txt，请确认放在 Resources/lua/ 目录");
+                    ta = Resources.Load<TextAsset>(basePath + ".lua");
+                }
+                if (ta == null)
+                {
+                    ta = Resources.Load<TextAsset>(basePath + ".txt");
+                }
+                if (ta == null)
+                {
+                    Debug.LogError($"LuaStateV2 加载失败: 未找到 {basePath}(.lua/.txt)，请确认放在 Resources/lua/ 目录，当前文件名参数= {luaFileName}");
                     return;
                 }
 
@@ -67,11 +76,21 @@ namespace LikeLoL04
                 luaEnvTable.SetMetaTable(meta);
                 meta.Dispose();
 
-                luaEnv.DoString("print = function(...) CS.UnityEngine.Debug.Log(table.concat({...}, ' ')) end");
+                // 安全重定向 print（避免 userdata 在 table.concat 中报错）
+                luaEnv.DoString(@"print = function(...)
+                    local parts = {}
+                    for i = 1, select('#', ...) do
+                        local v = select(i, ...)
+                        parts[#parts+1] = tostring(v)
+                    end
+                    CS.UnityEngine.Debug.Log(table.concat(parts, ' '))
+                end");
 
                 // 先注入上下文（脚本内可直接使用 global self / stateId）
                 luaEnvTable.Set("self", selfLOLGameObject);
                 luaEnvTable.Set("stateId", luaFileName);
+                luaEnvTable.Set("stateMachine", stateMachine);
+                luaEnvTable.Set("state", this);
 
                 // 在该环境中执行脚本，脚本需 return table（定义回调）
                 object[] rets = luaEnv.DoString(ta.text, luaFileName, luaEnvTable);

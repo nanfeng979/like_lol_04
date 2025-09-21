@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using XLua;
 
 namespace LikeLoL04
 {
@@ -21,10 +22,7 @@ namespace LikeLoL04
         protected LOLGameObject selfLOLGameObject;
 
         protected string animationName = "";
-        protected Action<StateMachineV2> onAnimationEnd = (stateMachine) =>
-        {
-            stateMachine.TransitionTo("DefaultState");
-        };
+        public Action onAnimationEnd = null;
 
         #endregion
 
@@ -40,6 +38,11 @@ namespace LikeLoL04
             this.stateMachine = stateMachine;
             this.selfLOLGameObject = LOLGameObject;
             this.animator = LOLGameObject.animator;
+
+            this.onAnimationEnd = () =>
+            {
+                stateMachine.TransitionTo(selfLOLGameObject.DefaultStateId);
+            };
         }
 
         #endregion
@@ -70,7 +73,7 @@ namespace LikeLoL04
                 // 非循环攻击动画在播放结束（normalizedTime >= 1）后回到默认状态
                 if (!stateInfo.loop && stateInfo.normalizedTime >= 1f)
                 {
-                    onAnimationEnd?.Invoke(stateMachine);
+                    onAnimationEnd?.Invoke();
                     return;
                 }
             }

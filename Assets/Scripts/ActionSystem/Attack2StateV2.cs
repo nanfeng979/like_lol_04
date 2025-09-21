@@ -14,9 +14,9 @@ namespace LikeLoL04
             : base(stateMachine, LOLGameObject)
         {
             animationName = "Attack2";
-            onAnimationEnd = (sm) =>
+            onAnimationEnd = () =>
             {
-                sm.TransitionTo("AttackState");
+                stateMachine.TransitionTo("AttackState");
             };
         }
 
