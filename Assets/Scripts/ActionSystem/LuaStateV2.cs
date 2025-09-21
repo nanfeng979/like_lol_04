@@ -18,7 +18,7 @@ namespace LikeLoL04
         private LuaTable luaEnvTable;
 
         // 绑定的 Lua 函数委托
-        private Action luaOnEnter;
+        private Action<object[]> luaOnEnter;
         private Action luaOnExit;
         private Action<float> luaOnUpdate;
         private Func<string, bool> luaCanTransitionTo; // 参数是目标状态 ID（字符串），更贴近日志与扩展
@@ -102,7 +102,7 @@ namespace LikeLoL04
                 luaTable = (LuaTable)rets[0];
 
                 // 绑定函数（可选）
-                luaOnEnter = luaTable.Get<Action>("OnEnter");
+                luaOnEnter = luaTable.Get<Action<object[]>>("OnEnter");
                 luaOnExit = luaTable.Get<Action>("OnExit");
                 luaOnUpdate = luaTable.Get<Action<float>>("OnUpdate");
                 luaCanTransitionTo = luaTable.Get<Func<string, bool>>("CanTransitionTo");
@@ -122,12 +122,12 @@ namespace LikeLoL04
             luaEnvTable.Set("self", selfLOLGameObject);
         }
 
-        public override void OnEnter()
+        public override void OnEnter(params object[] args)
         {
-            base.OnEnter();
+            base.OnEnter(args);
             EnsureLuaLoaded();
             RefreshContext();
-            luaOnEnter?.Invoke();
+            luaOnEnter?.Invoke(args);
         }
 
         public override void OnUpdate()

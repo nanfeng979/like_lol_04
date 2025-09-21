@@ -22,9 +22,9 @@ namespace LikeLoL04
 
         #region State Implementation
 
-        public override void OnEnter()
+        public override void OnEnter(params object[] args)
         {
-            base.OnEnter();
+            base.OnEnter(args);
             if (selfLOLGameObject.animator != null)
             {
                 float dur = stateMachine.CurrentTransitionDuration;

@@ -21,9 +21,9 @@ namespace LikeLoL04
 
         #region State Implementation
 
-        public override void OnEnter()
+        public override void OnEnter(params object[] args)
         {
-            base.OnEnter();
+            base.OnEnter(args);
             float dur = stateMachine.CurrentTransitionDuration;
             selfLOLGameObject.animator.CrossFade("Spell1_run", dur, -1, 0f);
         }

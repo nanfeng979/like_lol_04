@@ -16,7 +16,6 @@ namespace LikeLoL04
         protected override void RegisterStates()
         {
             base.RegisterStates();
-            stateMachine.RegisterState("BeAttack", new BeAttackV2(stateMachine, this));
         }
 
         public override void InteractWithTarget(LOLGameObject target)

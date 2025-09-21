@@ -6,15 +6,18 @@
 
 local M = {}
 
-function M.OnEnter()
+function M.OnEnter(params)
     M.elapsed = 0
 
     state.AnimationName = "Spell3";
     dur = stateMachine.CurrentTransitionDuration;
     state.Animator:CrossFade(state.AnimationName, dur, -1, 0);
 
+    params[0].enabled = true
+
     state.onAnimationEnd = function()
         stateMachine:TransitionTo(self.DefaultStateId)
+        params[0].enabled = false
     end
 end
 

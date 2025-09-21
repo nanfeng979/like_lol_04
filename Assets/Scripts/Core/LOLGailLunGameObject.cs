@@ -14,6 +14,7 @@ namespace LikeLoL04
             AttackRange = 200f;
             stateMachine.SetTransitionDuration("Attack2State", "DefaultState", 0.08f);
             stateMachine.SetTransitionDuration("AttackState", "Attack2State", 0.08f);
+            stateMachine.SetTransitionDuration("Spell3", "DefaultState", 0.05f);
         }
 
         protected override void Update()
@@ -26,7 +27,8 @@ namespace LikeLoL04
             }
             else if (Input.GetKeyDown(KeyCode.E))
             {
-                stateMachine.TransitionTo("Spell3");
+                weaponTrigger.Owner = this;
+                stateMachine.TransitionTo("Spell3", weaponTrigger);
             }
             else if (Input.GetKeyDown(KeyCode.R) && _target != null && IsTargetInAttackRange(_target))
             {
@@ -66,5 +68,7 @@ namespace LikeLoL04
                 Target.BeAttack();
             }
         }
+
+        public GailunWeaponTrigger weaponTrigger;
     }
 }

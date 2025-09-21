@@ -53,7 +53,7 @@ namespace LikeLoL04
         /// <summary>
         /// 进入状态
         /// </summary>
-        public virtual void OnEnter()
+        public virtual void OnEnter(params object[] args)
         {
             // Debug.Log($"进入状态: {GetType().Name}");
         }

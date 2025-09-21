@@ -10,7 +10,7 @@ namespace LikeLoL04
         /// <summary>
         /// 进入状态时调用
         /// </summary>
-        void OnEnter();
+        void OnEnter(params object[] args);
         
         /// <summary>
         /// 状态更新，每帧调用

@@ -188,7 +188,7 @@ namespace LikeLoL04
 
         public void BeAttack()
         {
-            stateMachine.TransitionTo("BeAttack");
+            // stateMachine.TransitionTo("BeAttack");
         }
 
         #region Hover Target Helpers
@@ -205,7 +205,6 @@ namespace LikeLoL04
 
             // 如需取消旧高亮，可在这里处理 HoverTarget
             HoverTarget = newHover;
-            Debug.Log($"HoverTarget set to {HoverTarget.name}");
         }
 
         /// <summary>
@@ -217,7 +216,6 @@ namespace LikeLoL04
             // TODO: Remove highlight logic from HoverTarget
             HoverTarget = null;
 
-            Debug.Log("HoverTarget cleared");
         }
         #endregion
 

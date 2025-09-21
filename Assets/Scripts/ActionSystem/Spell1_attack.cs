@@ -27,9 +27,9 @@ namespace LikeLoL04
 
         #region State Implementation
 
-        public override void OnEnter()
+        public override void OnEnter(params object[] args)
         {
-            base.OnEnter();
+            base.OnEnter(args);
             // 进入攻击状态时设置一个短暂的朝向过渡（水平朝向）
             SetupFaceTargetTween();
             

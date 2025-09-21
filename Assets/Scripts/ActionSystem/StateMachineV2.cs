@@ -102,7 +102,7 @@ namespace LikeLoL04
         /// </summary>
         /// <param name="stateId">目标状态的字符串标识符</param>
         /// <returns>是否切换成功</returns>
-        public bool TransitionTo(string stateId)
+        public bool TransitionTo(string stateId, params object[] args)
         {
             if (string.IsNullOrEmpty(stateId))
             {
@@ -147,7 +147,7 @@ namespace LikeLoL04
             // 切换到新状态
             currentStateId = stateId;
             currentState = stateDict[stateId];
-            currentState.OnEnter();
+            currentState.OnEnter(args);
 
             return true;
         }
