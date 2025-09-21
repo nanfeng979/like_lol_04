@@ -238,5 +238,6 @@ namespace LikeLoL04
     {
         public Sprite Avatar;
 
+        public int AttackValue;
     }
 }

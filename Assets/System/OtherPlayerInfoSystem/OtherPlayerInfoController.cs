@@ -55,12 +55,22 @@ public class OtherPlayerInfoController : MonoBehaviour
     {
         if (target != null)
         {
-            AvatarImage.sprite = target.Data.Avatar;
+            SetOtherPlayerInfo(target);
             Show();
         }
     }
 
     public Image AvatarImage;
+    public Text AttackText;
+
+    private void SetOtherPlayerInfo(LOLGameObject target)
+    {
+        if (target != null)
+        {
+            AvatarImage.sprite = target.Data.Avatar;
+            AttackText.text = target.Data.AttackValue.ToString();
+        }
+    }
 
     public void Show()
     {
