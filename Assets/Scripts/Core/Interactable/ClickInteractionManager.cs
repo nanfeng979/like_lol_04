@@ -22,31 +22,52 @@ namespace LikeLoL04
 
         void Update()
         {
-            if (Input.GetMouseButtonDown(1)) // 右键点击
-            {
-                HandleRightClick();
-            }
+            UpdateInteraction();
         }
 
-        private void HandleRightClick()
+        /// <summary>
+        /// 合并点击与悬停：单次 Raycast 同时处理右键交互与 Hover 目标
+        /// </summary>
+        private void UpdateInteraction()
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (player == null || mainCamera == null) return;
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 10000f, interactableLayerMask))
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            bool hasHit = Physics.Raycast(ray, out RaycastHit hit, 10000f, interactableLayerMask);
+
+            // Hover 逻辑
+            if (hasHit)
             {
+                var hoverLol = hit.collider.GetComponent<LOLGameObject>();
+                if (hoverLol != null && hoverLol != player)
+                {
+                    player.SetHoverTarget(hoverLol);
+                }
+                else
+                {
+                    player.ClearHoverTarget();
+                }
+            }
+            else
+            {
+                player.ClearHoverTarget();
+            }
+
+            // 右键点击逻辑（仅在按下当帧执行，不需要第二次 Raycast）
+            if (Input.GetMouseButtonDown(1) && hasHit)
+            {
+                // 地面点击优先
                 Ground ground = hit.collider.GetComponent<Ground>();
                 if (ground != null)
                 {
                     player.InteractWithPosition(hit.point);
                     return;
                 }
-                LOLGameObject lolGameObject = hit.collider.GetComponent<LOLGameObject>();
-                if (lolGameObject != null)
+
+                LOLGameObject lol = hit.collider.GetComponent<LOLGameObject>();
+                if (lol != null && lol != player)
                 {
-                    if (lolGameObject == player)
-                        return; // 不与自己交互
-                    player.InteractWithTarget(lolGameObject);
-                    return;
+                    player.InteractWithTarget(lol);
                 }
             }
         }

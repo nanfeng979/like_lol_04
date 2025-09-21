@@ -28,6 +28,10 @@ namespace LikeLoL04
             {
                 stateMachine.TransitionTo("Spell3");
             }
+            else if (Input.GetKeyDown(KeyCode.R) && _target != null && IsTargetInAttackRange(_target))
+            {
+                stateMachine.TransitionTo("Spell4");
+            }
 
             if (stateMachine.CurrentStateId == MoveStateId && Target != null)
             {
@@ -42,6 +46,7 @@ namespace LikeLoL04
             stateMachine.RegisterState("AttackState", new AttackStateV2(stateMachine, this));
             stateMachine.RegisterState("Attack2State", new Attack2StateV2(stateMachine, this));
             stateMachine.RegisterState("Spell3", new Spell3LuaState(stateMachine, this));
+            stateMachine.RegisterState("Spell4", new Spell4LuaState(stateMachine, this));
         }
 
         public override void InteractWithTarget(LOLGameObject target)

@@ -1,0 +1,32 @@
+-- spell3.txt
+-- 返回一个 table，提供状态生命周期函数
+-- 通过 LuaStateV2 注入的变量：
+-- self : C# LOLGameObject 实例
+-- stateId : 该状态 ID
+
+local M = {}
+
+function M.OnEnter()
+    M.elapsed = 0
+
+    state.AnimationName = "Spell4";
+    dur = stateMachine.CurrentTransitionDuration;
+    state.Animator:CrossFade(state.AnimationName, dur, -1, 0);
+
+    state.onAnimationEnd = function()
+        stateMachine:TransitionTo(self.DefaultStateId)
+    end
+end
+
+function M.OnUpdate(dt)
+    M.elapsed = M.elapsed + dt
+end
+
+function M.OnExit()
+end
+
+function M.CanTransitionTo(targetStateId)
+    return true
+end
+
+return M

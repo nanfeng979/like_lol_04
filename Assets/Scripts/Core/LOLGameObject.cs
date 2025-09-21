@@ -35,6 +35,11 @@ namespace LikeLoL04
         /// </summary>
         public LOLGameObject Target { get; set; }
 
+    /// <summary>
+    /// 鼠标当前悬停的单位（无需点击）。由交互管理器实时更新。
+    /// </summary>
+    public LOLGameObject HoverTarget { get; private set; }
+
         /// <summary>
         /// 目标位置
         /// </summary>
@@ -185,6 +190,38 @@ namespace LikeLoL04
         {
             stateMachine.TransitionTo("BeAttack");
         }
+
+        #region Hover Target Helpers
+        /// <summary>
+        /// 设置当前悬停目标（不与自己或重复对象进行多余操作）。
+        /// 可在此加入高亮/描边等表现。
+        /// </summary>
+        public void SetHoverTarget(LOLGameObject newHover)
+        {
+            if (newHover == null || newHover == this)
+                return;
+            if (HoverTarget == newHover)
+                return; // 未变化
+
+            // 如需取消旧高亮，可在这里处理 HoverTarget
+            HoverTarget = newHover;
+            Debug.Log($"HoverTarget set to {HoverTarget.name}");
+        }
+
+        /// <summary>
+        /// 清除当前悬停目标。
+        /// </summary>
+        public void ClearHoverTarget()
+        {
+            if (HoverTarget == null) return;
+            // TODO: Remove highlight logic from HoverTarget
+            HoverTarget = null;
+
+            Debug.Log("HoverTarget cleared");
+        }
+        #endregion
+
+        protected LOLGameObject _target { get => Target ?? HoverTarget; }
 
         // ==== BuffManager 便捷封装 ==== //
         public T AddBuff<T>(T buff) where T : Buff => buffManager.Add(buff);
