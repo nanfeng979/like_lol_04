@@ -9,6 +9,10 @@ local M = {}
 function M.OnEnter()
     M.elapsed = 0
 
+    state.AnimationName = "Spell3";
+    dur = stateMachine.CurrentTransitionDuration;
+    state.Animator:CrossFade(state.AnimationName, dur, -1, 0);
+
     state.onAnimationEnd = function()
         stateMachine:TransitionTo(self.DefaultStateId)
     end
@@ -17,7 +21,6 @@ end
 function M.OnUpdate(dt)
     M.elapsed = M.elapsed + dt
 
-    -- print(state.onAnimationEnd)
     self:HandleMoveToPosition();
 end
 

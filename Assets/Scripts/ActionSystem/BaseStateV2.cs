@@ -22,6 +22,7 @@ namespace LikeLoL04
         protected LOLGameObject selfLOLGameObject;
 
         protected string animationName = "";
+        public string AnimationName { get => animationName; set => animationName = value; }
         public Action onAnimationEnd = null;
 
         #endregion
@@ -114,5 +115,6 @@ namespace LikeLoL04
         #endregion
 
         protected Animator animator;
+        public Animator Animator => animator;
     }
 }
