@@ -14,10 +14,7 @@ namespace LikeLoL04
         public Spell1_attackV2(StateMachineV2 stateMachine, LOLGameObject LOLGameObject)
             : base(stateMachine, LOLGameObject)
         {
-            onAnimationEnd = (sm) =>
-            {
-                sm.TransitionTo(selfLOLGameObject.DefaultStateId);
-            };
+            animationName = "Spell1";
         }
 
         #endregion
@@ -29,7 +26,7 @@ namespace LikeLoL04
             base.OnEnter();
             
             float dur = stateMachine.CurrentTransitionDuration;
-            animator.CrossFade("Spell1", dur, -1, 0f);
+            animator.CrossFade(animationName, dur, -1, 0f);
         }
 
         public override void OnUpdate()
