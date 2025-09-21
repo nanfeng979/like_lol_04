@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace LikeLoL04
@@ -9,13 +10,29 @@ namespace LikeLoL04
 
     public class ClickInteractionManager : MonoBehaviour
     {
+        public static ClickInteractionManager Instance;
+
         [SerializeField] private Camera mainCamera;
         [SerializeField] private LayerMask interactableLayerMask;
 
         public LOLGameObject player;
+        // 左键点击到单位事件（不包括自己）
+        public event Action<LOLGameObject> OnLeftClickWithTarget;
+        // 右键点击到单位事件（不包括自己）
+        public event Action<LOLGameObject> OnRightClickWithTarget;
 
         void Awake()
         {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             if (mainCamera == null)
                 mainCamera = Camera.main;
         }
@@ -53,7 +70,17 @@ namespace LikeLoL04
                 player.ClearHoverTarget();
             }
 
-            // 右键点击逻辑（仅在按下当帧执行，不需要第二次 Raycast）
+            // 左键（选择单位）逻辑
+            if (Input.GetMouseButtonDown(0) && hasHit)
+            {
+                LOLGameObject leftTarget = hit.collider.GetComponent<LOLGameObject>();
+                if (leftTarget != null && leftTarget != player)
+                {
+                    OnLeftClickWithTarget?.Invoke(leftTarget);
+                }
+            }
+
+            // 右键点击逻辑（地面移动 / 攻击 / 追击）
             if (Input.GetMouseButtonDown(1) && hasHit)
             {
                 // 地面点击优先
@@ -61,13 +88,15 @@ namespace LikeLoL04
                 if (ground != null)
                 {
                     player.InteractWithPosition(hit.point);
-                    return;
                 }
-
-                LOLGameObject lol = hit.collider.GetComponent<LOLGameObject>();
-                if (lol != null && lol != player)
+                else
                 {
-                    player.InteractWithTarget(lol);
+                    LOLGameObject rightTarget = hit.collider.GetComponent<LOLGameObject>();
+                    if (rightTarget != null && rightTarget != player)
+                    {
+                        player.InteractWithTarget(rightTarget);
+                        OnRightClickWithTarget?.Invoke(rightTarget);
+                    }
                 }
             }
         }

@@ -35,10 +35,10 @@ namespace LikeLoL04
         /// </summary>
         public LOLGameObject Target { get; set; }
 
-    /// <summary>
-    /// 鼠标当前悬停的单位（无需点击）。由交互管理器实时更新。
-    /// </summary>
-    public LOLGameObject HoverTarget { get; private set; }
+        /// <summary>
+        /// 鼠标当前悬停的单位（无需点击）。由交互管理器实时更新。
+        /// </summary>
+        public LOLGameObject HoverTarget { get; private set; }
 
         /// <summary>
         /// 目标位置
@@ -228,5 +228,15 @@ namespace LikeLoL04
         public bool HasBuff<T>() where T : Buff => buffManager.Has<T>();
         public T GetBuff<T>() where T : Buff => buffManager.Get<T>();
         public void ClearBuffs() => buffManager.Clear();
+
+        public LOLGameObjectData Data;
+
+    }
+
+    [System.Serializable]
+    public class LOLGameObjectData
+    {
+        public Sprite Avatar;
+
     }
 }

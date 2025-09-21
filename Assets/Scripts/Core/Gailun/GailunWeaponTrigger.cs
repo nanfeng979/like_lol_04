@@ -20,7 +20,6 @@ namespace LikeLoL04
         {
             if (Owner == null)
             {
-                Debug.LogError("GailunWeaponTrigger: Owner 未设置");
                 return;
             }
 
