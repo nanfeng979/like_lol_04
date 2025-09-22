@@ -1,96 +1,99 @@
-using System.Collections;
-using System.Collections.Generic;
-using LikeLoL04;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class OtherPlayerInfoController : MonoBehaviour
+namespace LikeLoL04
 {
-    public static OtherPlayerInfoController Instance;
-
-    public CanvasGroup canvasGroup;
-
-    private bool isVisible = false;
-    [SerializeField]
-    private float autoHideSeconds = 3f; // X 秒后自动隐藏；<=0 表示不自动隐藏
-    private float hideAtTime = -1f;
-
-    void Awake()
+    public class OtherPlayerInfoController : MonoBehaviour
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        public static OtherPlayerInfoController Instance;
 
-        Hide();
-    }
+        [Header("MVC Components")]
+        [SerializeField] private OtherPlayerInfoView view;
+        private OtherPlayerInfoModel model = new OtherPlayerInfoModel();
 
-    void Start()
-    {
-        ClickInteractionManager.Instance.OnLeftClickWithTarget += ShowOtherPlayerInfo;
-    }
+        [Header("Timing")]
+        [SerializeField] private float autoHideSeconds = 3f; // X 秒后自动隐藏；<=0 关闭
+        private float hideAtTime = -1f;
+        private bool isVisible = false;
 
-    void Update()
-    {
-        if (isVisible && autoHideSeconds > 0f && hideAtTime > 0f)
+        void Awake()
         {
-            if (Time.time >= hideAtTime)
+            if (Instance == null)
             {
-                Hide();
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            if (view == null)
+            {
+                view = GetComponentInChildren<OtherPlayerInfoView>(true);
+            }
+            HideImmediate();
+        }
+
+        void Start()
+        {
+            ClickInteractionManager.Instance.OnLeftClickWithTarget += ShowOtherPlayerInfo;
+        }
+
+        void Update()
+        {
+            if (isVisible && autoHideSeconds > 0f && hideAtTime > 0f)
+            {
+                if (Time.time >= hideAtTime)
+                {
+                    Hide();
+                }
             }
         }
-    }
 
-    void OnDestroy()
-    {
-        ClickInteractionManager.Instance.OnLeftClickWithTarget -= ShowOtherPlayerInfo;
-    }
-
-    private void ShowOtherPlayerInfo(LOLGameObject target)
-    {
-        if (target != null)
+        void OnDestroy()
         {
-            SetOtherPlayerInfo(target);
-            Show();
+            ClickInteractionManager.Instance.OnLeftClickWithTarget -= ShowOtherPlayerInfo;
+        }
+
+        private void ShowOtherPlayerInfo(LOLGameObject target)
+        {
+            if (target != null)
+            {
+                model.FromLOLGameObject(target);
+                ApplyModel();
+                Show();
+            }
+        }
+        private void ApplyModel()
+        {
+            view?.Apply(model);
+        }
+
+        public void Show()
+        {
+            if (view == null) return;
+            view.Show();
+            isVisible = true;
+            if (autoHideSeconds > 0f)
+            {
+                hideAtTime = Time.time + autoHideSeconds;
+            }
+        }
+
+        public void Hide()
+        {
+            if (view == null) return;
+            view.Hide();
+            isVisible = false;
+            hideAtTime = -1f;
+        }
+
+        private void HideImmediate()
+        {
+            if (view == null) return;
+            view.Hide();
+            isVisible = false;
+            hideAtTime = -1f;
         }
     }
-
-    public Image AvatarImage;
-    public Text AttackText;
-
-    private void SetOtherPlayerInfo(LOLGameObject target)
-    {
-        if (target != null)
-        {
-            AvatarImage.sprite = target.Data.Avatar;
-            AttackText.text = target.Data.AttackValue.ToString();
-        }
-    }
-
-    public void Show()
-    {
-        canvasGroup.alpha = 1;
-        canvasGroup.blocksRaycasts = true;
-        canvasGroup.interactable = true;
-        isVisible = true;
-        if (autoHideSeconds > 0f)
-        {
-            hideAtTime = Time.time + autoHideSeconds; // 重置计时
-        }
-    }
-
-    public void Hide()
-    {
-        canvasGroup.alpha = 0;
-        canvasGroup.blocksRaycasts = false;
-        canvasGroup.interactable = false;
-        isVisible = false;
-        hideAtTime = -1f;
-    }
-
 }
