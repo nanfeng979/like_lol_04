@@ -236,6 +236,30 @@ namespace LikeLoL04
     [System.Serializable]
     public class LOLGameObjectData
     {
+
+        [SerializeField]
+        private float _currentHp;
+
+        public float CurrentHp
+        {
+            get => _currentHp;
+            set => _currentHp = Mathf.Clamp(value, 0, MaxHp);
+        }
+
+        [SerializeField]
+        private float _maxHp = 1000f;
+
+        public float MaxHp
+        {
+            get => _maxHp;
+            set
+            {
+                _maxHp = Mathf.Max(1f, value);
+                if (_currentHp > _maxHp)
+                    _currentHp = _maxHp;
+            }
+        }
+
         public Sprite Avatar;
 
         public int AttackValue;

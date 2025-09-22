@@ -7,6 +7,7 @@ namespace LikeLoL04
     {
         [Header("Bindings")]
         public CanvasGroup canvasGroup;
+        public Text currentHpAndMaxHpText;
         public Image avatarImage;
         public Text attackText;
 
@@ -21,10 +22,12 @@ namespace LikeLoL04
             {
                 if (avatarImage) avatarImage.sprite = null;
                 if (attackText) attackText.text = "";
+                if (currentHpAndMaxHpText) currentHpAndMaxHpText.text = "";
                 return;
             }
             if (avatarImage) avatarImage.sprite = model.Avatar;
             if (attackText) attackText.text = model.AttackValue.ToString();
+            if (currentHpAndMaxHpText) currentHpAndMaxHpText.text = $"{model.CurrentHp}/{model.MaxHp}";
         }
 
         public void Show()
