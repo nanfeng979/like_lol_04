@@ -14,7 +14,7 @@ namespace LikeLoL04
             AttackRange = 200f;
             stateMachine.SetTransitionDuration("Attack2State", "DefaultState", 0.08f);
             stateMachine.SetTransitionDuration("AttackState", "Attack2State", 0.08f);
-            stateMachine.SetTransitionDuration("Spell3", "DefaultState", 0.05f);
+            stateMachine.SetTransitionDuration("Spell3", "DefaultState", 0f);
         }
 
         protected override void Update()
