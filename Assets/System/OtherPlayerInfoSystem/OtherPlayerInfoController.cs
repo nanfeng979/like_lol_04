@@ -37,6 +37,7 @@ namespace LikeLoL04
         void Start()
         {
             ClickInteractionManager.Instance.OnLeftClickWithTarget += ShowOtherPlayerInfo;
+            ClickInteractionManager.Instance.OnRightClickWithTarget += ShowOtherPlayerInfo;
         }
 
         void Update()
@@ -53,6 +54,7 @@ namespace LikeLoL04
         void OnDestroy()
         {
             ClickInteractionManager.Instance.OnLeftClickWithTarget -= ShowOtherPlayerInfo;
+            ClickInteractionManager.Instance.OnRightClickWithTarget -= ShowOtherPlayerInfo;
         }
 
         private void ShowOtherPlayerInfo(LOLGameObject target)
