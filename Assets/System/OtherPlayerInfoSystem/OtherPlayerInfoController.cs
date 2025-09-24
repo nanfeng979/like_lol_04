@@ -1,3 +1,4 @@
+using LikeLoL04.EventSystem;
 using UnityEngine;
 
 namespace LikeLoL04
@@ -32,6 +33,8 @@ namespace LikeLoL04
                 view = GetComponentInChildren<OtherPlayerInfoView>(true);
             }
             HideImmediate();
+
+            m_ListenLOLGameObjectHpChange();
         }
 
         void Start()
@@ -46,7 +49,7 @@ namespace LikeLoL04
             {
                 if (Time.time >= hideAtTime)
                 {
-                    Hide();
+                    // Hide();
                 }
             }
         }
@@ -55,6 +58,8 @@ namespace LikeLoL04
         {
             ClickInteractionManager.Instance.OnLeftClickWithTarget -= ShowOtherPlayerInfo;
             ClickInteractionManager.Instance.OnRightClickWithTarget -= ShowOtherPlayerInfo;
+
+            m_UnlistenLOLGameObjectHpChange();
         }
 
         private void ShowOtherPlayerInfo(LOLGameObject target)
@@ -96,6 +101,32 @@ namespace LikeLoL04
             view.Hide();
             isVisible = false;
             hideAtTime = -1f;
+        }
+
+        private void m_ListenLOLGameObjectHpChange()
+        {
+            EventBus.On("HealthChanged", m_LOLGameObjectHpChangeAction);
+        }
+
+        private void m_UnlistenLOLGameObjectHpChange()
+        {
+            EventBus.Off("HealthChanged", m_LOLGameObjectHpChangeAction);
+        }
+
+        private void m_LOLGameObjectHpChangeAction(object[] args)
+        {
+            if (args.Length == 3 && args[0] is string name && args[1] is int currentHp && args[2] is int maxHp)
+            {
+                bool sourceNotNull = model.Source != null;
+                bool dataNotNull = sourceNotNull && model.Source.Data != null;
+                bool nameMatches = dataNotNull && model.Source.Data.Name == name;
+
+                if (nameMatches)
+                {
+                    model.UpdateHp(currentHp, maxHp);
+                    view?.UpdateHp(currentHp, maxHp);
+                }
+            }
         }
     }
 }

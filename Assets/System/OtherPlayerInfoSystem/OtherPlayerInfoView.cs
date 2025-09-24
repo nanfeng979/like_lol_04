@@ -1,3 +1,4 @@
+using LikeLoL04.EventSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +29,11 @@ namespace LikeLoL04
             if (avatarImage) avatarImage.sprite = model.Avatar;
             if (attackText) attackText.text = model.AttackValue.ToString();
             if (currentHpAndMaxHpText) currentHpAndMaxHpText.text = $"{model.CurrentHp}/{model.MaxHp}";
+        }
+
+        public void UpdateHp(int currentHp, int maxHp)
+        {
+            if (currentHpAndMaxHpText) currentHpAndMaxHpText.text = $"{currentHp}/{maxHp}";
         }
 
         public void Show()

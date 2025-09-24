@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LikeLoL04.EventSystem;
 using UnityEngine;
 
 namespace LikeLoL04
@@ -189,6 +190,7 @@ namespace LikeLoL04
         public void BeAttack()
         {
             // stateMachine.TransitionTo("BeAttack");
+            Data.CurrentHp -= 50;
         }
 
         #region Hover Target Helpers
@@ -237,24 +239,31 @@ namespace LikeLoL04
     public class LOLGameObjectData
     {
 
-        [SerializeField]
-        private float _currentHp;
+        private string _name = "LOLGameObject";
+        public string Name { get => _name; set => _name = value; }
 
-        public float CurrentHp
+        [SerializeField]
+        private int _currentHp;
+
+        public int CurrentHp
         {
             get => _currentHp;
-            set => _currentHp = Mathf.Clamp(value, 0, MaxHp);
+            set
+            {
+                _currentHp = Mathf.Clamp(value, 0, MaxHp);
+                EventBus.Emit("HealthChanged", Name, _currentHp, MaxHp);
+            }
         }
 
         [SerializeField]
-        private float _maxHp = 1000f;
+        private int _maxHp = 1000;
 
-        public float MaxHp
+        public int MaxHp
         {
             get => _maxHp;
             set
             {
-                _maxHp = Mathf.Max(1f, value);
+                _maxHp = Mathf.Max(1, value);
                 if (_currentHp > _maxHp)
                     _currentHp = _maxHp;
             }

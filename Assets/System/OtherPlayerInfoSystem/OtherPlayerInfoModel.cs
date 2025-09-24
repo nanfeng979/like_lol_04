@@ -29,5 +29,11 @@ namespace LikeLoL04
                 AttackValue = 0;
             }
         }
+
+        public void UpdateHp(int currentHp, int maxHp)
+        {
+            CurrentHp = currentHp;
+            MaxHp = maxHp;
+        }
     }
 }
