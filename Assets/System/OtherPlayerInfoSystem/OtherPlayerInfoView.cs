@@ -9,6 +9,7 @@ namespace LikeLoL04
         [Header("Bindings")]
         public CanvasGroup canvasGroup;
         public Text currentHpAndMaxHpText;
+        public Image currentHpBarImage;
         public Image avatarImage;
         public Text attackText;
 
@@ -21,24 +22,25 @@ namespace LikeLoL04
         {
             if (model == null)
             {
-                if (avatarImage) avatarImage.sprite = null;
-                if (attackText) attackText.text = "";
-                if (currentHpAndMaxHpText) currentHpAndMaxHpText.text = "";
+                avatarImage.sprite = null;
+                attackText.text = "";
+                currentHpAndMaxHpText.text = "";
                 return;
             }
-            if (avatarImage) avatarImage.sprite = model.Avatar;
-            if (attackText) attackText.text = model.AttackValue.ToString();
-            if (currentHpAndMaxHpText) currentHpAndMaxHpText.text = $"{model.CurrentHp}/{model.MaxHp}";
+            avatarImage.sprite = model.Avatar;
+            attackText.text = model.AttackValue.ToString();
+            currentHpAndMaxHpText.text = $"{model.CurrentHp}/{model.MaxHp}";
+            currentHpBarImage.fillAmount = (float)model.CurrentHp / (float)model.MaxHp;
         }
 
         public void UpdateHp(int currentHp, int maxHp)
         {
-            if (currentHpAndMaxHpText) currentHpAndMaxHpText.text = $"{currentHp}/{maxHp}";
+            currentHpAndMaxHpText.text = $"{currentHp}/{maxHp}";
+            currentHpBarImage.fillAmount = (float)currentHp / (float)maxHp;
         }
 
         public void Show()
         {
-            if (canvasGroup == null) return;
             canvasGroup.alpha = 1f;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
@@ -46,7 +48,6 @@ namespace LikeLoL04
 
         public void Hide()
         {
-            if (canvasGroup == null) return;
             canvasGroup.alpha = 0f;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
