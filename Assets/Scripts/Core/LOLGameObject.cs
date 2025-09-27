@@ -99,20 +99,36 @@ namespace LikeLoL04
         // 处理移动，返回是否到达停止距离
         public bool HandleMoveToPosition()
         {
+            // 获取XZ平面的位置（忽略Y轴）
             Vector3 currentPos = transform.position;
-            float distance = Vector3.Distance(currentPos, TargetPosition);
+            Vector3 targetPos = TargetPosition;
+            
+            // 创建忽略Y轴的2D位置向量
+            Vector2 currentPos2D = new Vector2(currentPos.x, currentPos.z);
+            Vector2 targetPos2D = new Vector2(targetPos.x, targetPos.z);
+            
+            float distance = Vector2.Distance(currentPos2D, targetPos2D);
+            
             if (distance <= 0.5f)
             {
                 return true; // 已到达
             }
 
-            Vector3 direction = (TargetPosition - currentPos).normalized;
-            Vector3 move = direction * moveSpeed * Time.deltaTime;
-            if (move.magnitude > distance)
+            Vector2 direction2D = (targetPos2D - currentPos2D).normalized;
+            Vector2 move2D = direction2D * moveSpeed * Time.deltaTime;
+            
+            if (move2D.magnitude > distance)
             {
-                move = direction * distance;
+                move2D = direction2D * distance;
             }
-            transform.position = currentPos + move;
+            
+            // 更新X和Z轴，保持Y轴不变
+            transform.position = new Vector3(
+                currentPos.x + move2D.x,
+                currentPos.y, // 保持原有Y值
+                currentPos.z + move2D.y
+            );
+            
             return false;
         }
 
