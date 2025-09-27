@@ -5,6 +5,7 @@ using UnityEngine;
 /// 监听 Shift+Q/W/E/R 的按键事件管理器。
 /// 模式参考 LOLClientMouseEventManager：集中输入检测，其他系统订阅事件。
 /// </summary>
+[DefaultExecutionOrder(-50)]
 public class LOLClientKeyEventManager : MonoBehaviour
 {
     public static LOLClientKeyEventManager Instance { get; private set; }
@@ -51,7 +52,14 @@ public class LOLClientKeyEventManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (shiftHeld) OnShiftSkillKey?.Invoke(3); else OnSkillKey?.Invoke(3);
+            if (shiftHeld)
+            {
+                OnShiftSkillKey?.Invoke(3);
+            }
+            else
+            {
+                OnSkillKey?.Invoke(3);
+            }
         }
         if (Input.GetKeyDown(KeyCode.R))
         {

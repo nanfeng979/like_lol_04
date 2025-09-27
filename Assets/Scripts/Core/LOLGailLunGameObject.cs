@@ -27,57 +27,18 @@ namespace LikeLoL04
             }
         }
 
-        void OnEnable()
-        {
-            TrySubscribeKeyEvents();
-        }
-
-        void OnDisable()
-        {
-            var keyMgr = LOLClientKeyEventManager.Instance;
-            if (keyMgr != null)
-            {
-                keyMgr.OnSkillKey -= HandleSkillKey;
-            }
-        }
-
-        private void TrySubscribeKeyEvents()
-        {
-            var keyMgr = LOLClientKeyEventManager.Instance;
-            if (keyMgr != null)
-            {
-                keyMgr.OnSkillKey -= HandleSkillKey; // 防重复
-                keyMgr.OnSkillKey += HandleSkillKey;
-            }
-        }
-
-        private void HandleSkillKey(int slot)
+        protected override void OnSkillKeyCast(int slot)
         {
             switch (slot)
             {
                 case 1: // Q
-                    if (Skill.IsSkillLearned(1) == false)
-                    {
-                        // 技能未学习，不能释放
-                        return;
-                    }
                     BuffManager.Add(new GailunQBuff(this));
                     break;
                 case 3: // E (槽位3 对应 E)
-                    if (Skill.IsSkillLearned(3) == false)
-                    {
-                        // 技能未学习，不能释放
-                        return;
-                    }
                     weaponTrigger.Owner = this;
                     stateMachine.TransitionTo("Spell3", weaponTrigger);
                     break;
                 case 4: // R
-                    if (Skill.IsSkillLearned(4) == false)
-                    {
-                        // 技能未学习，不能释放
-                        return;
-                    }
                     if (_target != null && IsTargetInAttackRange(_target))
                     {
                         stateMachine.TransitionTo("Spell4");
@@ -94,16 +55,6 @@ namespace LikeLoL04
             stateMachine.RegisterState("Attack2State", new Attack2StateV2(stateMachine, this));
             stateMachine.RegisterState("Spell3", new Spell3LuaState(stateMachine, this));
             stateMachine.RegisterState("Spell4", new Spell4LuaState(stateMachine, this));
-        }
-
-        public override void InteractWithTarget(LOLGameObject target)
-        {
-            base.InteractWithTarget(target);
-        }
-
-        public override void InteractWithPosition(Vector3 targetPos)
-        {
-            base.InteractWithPosition(targetPos);
         }
 
         public void AttackTarget()
