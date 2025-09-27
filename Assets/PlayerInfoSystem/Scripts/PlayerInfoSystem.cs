@@ -3,59 +3,29 @@ using System.Collections.Generic;
 using LikeLoL04.EventSystem;
 using UnityEngine;
 
-public class PlayerInfoSystem : MonoBehaviour
+namespace LikeLoL04
 {
-    public static PlayerInfoSystem instance;
-
-    private CanvasGroup canvasGroup;
-
-    private bool isVisible = false;
-
-    private void Awake()
+    /// <summary>
+    /// 玩家信息系统，负责管理玩家信息的整体功能
+    /// </summary>
+    public class PlayerInfoSystem : MonoBehaviour
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        public static PlayerInfoSystem instance;
 
-        canvasGroup = GetComponent<CanvasGroup>();
+        public PlayerInfoController playerInfoController;
 
-        Hide();
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
+        private void Awake()
         {
-            isVisible = !isVisible;
-            if (isVisible)
+            if (instance == null)
             {
-                Show();
+                instance = this;
             }
             else
             {
-                Hide();
+                Destroy(gameObject);
+                return;
             }
         }
-    }
 
-    public void Show()
-    {
-        canvasGroup.alpha = 1;
-        canvasGroup.blocksRaycasts = true;
-        canvasGroup.interactable = true;
     }
-
-    public void Hide()
-    {
-        canvasGroup.alpha = 0;
-        canvasGroup.blocksRaycasts = false;
-        canvasGroup.interactable = false;
-    }
-
 }
