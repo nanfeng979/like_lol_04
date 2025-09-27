@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace LikeLoL04
 {
-    public class LOLGailLunGameObject : LOLGameObject
+    public class LOLGailLunGameObject : LOLHeroGameObject
     {
         protected override void Start()
         {
@@ -56,13 +56,28 @@ namespace LikeLoL04
             switch (slot)
             {
                 case 1: // Q
+                    if (Skill.IsSkillLearned(1) == false)
+                    {
+                        // 技能未学习，不能释放
+                        return;
+                    }
                     BuffManager.Add(new GailunQBuff(this));
                     break;
                 case 3: // E (槽位3 对应 E)
+                    if (Skill.IsSkillLearned(3) == false)
+                    {
+                        // 技能未学习，不能释放
+                        return;
+                    }
                     weaponTrigger.Owner = this;
                     stateMachine.TransitionTo("Spell3", weaponTrigger);
                     break;
                 case 4: // R
+                    if (Skill.IsSkillLearned(4) == false)
+                    {
+                        // 技能未学习，不能释放
+                        return;
+                    }
                     if (_target != null && IsTargetInAttackRange(_target))
                     {
                         stateMachine.TransitionTo("Spell4");
