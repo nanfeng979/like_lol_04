@@ -21,23 +21,53 @@ namespace LikeLoL04
         {
             base.Update();
 
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                BuffManager.Add(new GailunQBuff(this));
-            }
-            else if (Input.GetKeyDown(KeyCode.E))
-            {
-                weaponTrigger.Owner = this;
-                stateMachine.TransitionTo("Spell3", weaponTrigger);
-            }
-            else if (Input.GetKeyDown(KeyCode.R) && _target != null && IsTargetInAttackRange(_target))
-            {
-                stateMachine.TransitionTo("Spell4");
-            }
-
             if (stateMachine.CurrentStateId == MoveStateId && Target != null)
             {
                 AttackTargetListener();
+            }
+        }
+
+        void OnEnable()
+        {
+            TrySubscribeKeyEvents();
+        }
+
+        void OnDisable()
+        {
+            var keyMgr = LOLClientKeyEventManager.Instance;
+            if (keyMgr != null)
+            {
+                keyMgr.OnSkillKey -= HandleSkillKey;
+            }
+        }
+
+        private void TrySubscribeKeyEvents()
+        {
+            var keyMgr = LOLClientKeyEventManager.Instance;
+            if (keyMgr != null)
+            {
+                keyMgr.OnSkillKey -= HandleSkillKey; // 防重复
+                keyMgr.OnSkillKey += HandleSkillKey;
+            }
+        }
+
+        private void HandleSkillKey(int slot)
+        {
+            switch (slot)
+            {
+                case 1: // Q
+                    BuffManager.Add(new GailunQBuff(this));
+                    break;
+                case 3: // E (槽位3 对应 E)
+                    weaponTrigger.Owner = this;
+                    stateMachine.TransitionTo("Spell3", weaponTrigger);
+                    break;
+                case 4: // R
+                    if (_target != null && IsTargetInAttackRange(_target))
+                    {
+                        stateMachine.TransitionTo("Spell4");
+                    }
+                    break;
             }
         }
 
