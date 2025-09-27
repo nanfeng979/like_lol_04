@@ -28,16 +28,16 @@ namespace LikeLoL04
         public bool HasHoveredPoint => hasHoveredPoint;
         public Vector3 HoveredPoint => hoveredPoint; // 使用前请先判断 HasHoveredPoint
 
-    // 本帧左键与右键点击到的第一个单位（如果有）
-    private LOLGameObject leftClickTarget;
-    private bool leftClickThisFrame;
-    private LOLGameObject rightClickTarget;
-    private bool rightClickThisFrame;
+        // 本帧左键与右键点击到的第一个单位（如果有）
+        private LOLGameObject leftClickTarget;
+        private bool leftClickThisFrame;
+        private LOLGameObject rightClickTarget;
+        private bool rightClickThisFrame;
 
-    public bool LeftClickThisFrame => leftClickThisFrame;
-    public LOLGameObject LeftClickTarget => leftClickTarget;
-    public bool RightClickThisFrame => rightClickThisFrame;
-    public LOLGameObject RightClickTarget => rightClickTarget;
+        public bool LeftClickThisFrame => leftClickThisFrame;
+        public LOLGameObject LeftClickTarget => leftClickTarget;
+        public bool RightClickThisFrame => rightClickThisFrame;
+        public LOLGameObject RightClickTarget => rightClickTarget;
 
         void Awake()
         {
