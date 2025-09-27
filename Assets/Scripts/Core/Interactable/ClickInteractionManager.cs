@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Linq;
 
 namespace LikeLoL04
 {
@@ -11,9 +12,6 @@ namespace LikeLoL04
     public class ClickInteractionManager : MonoBehaviour
     {
         public static ClickInteractionManager Instance;
-
-        [SerializeField] private Camera mainCamera;
-        [SerializeField] private LayerMask interactableLayerMask;
 
         public LOLGameObject player;
         // 左键点击到单位事件（不包括自己）
@@ -33,8 +31,6 @@ namespace LikeLoL04
                 return;
             }
 
-            if (mainCamera == null)
-                mainCamera = Camera.main;
         }
 
         void Update()
@@ -47,55 +43,51 @@ namespace LikeLoL04
         /// </summary>
         private void UpdateInteraction()
         {
-            if (player == null || mainCamera == null) return;
+            if (player == null) return;
 
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            bool hasHit = Physics.Raycast(ray, out RaycastHit hit, 10000f, interactableLayerMask);
+            var mouseMgr = LOLClientMouseEventManager.Instance;
+            if (mouseMgr == null) return;
 
-            // Hover 逻辑
-            if (hasHit)
+            // Hover：取第一个检测到的对象
+            var first = mouseMgr.DetectedObjects.FirstOrDefault();
+            if (first != null && first != player)
             {
-                var hoverLol = hit.collider.GetComponent<LOLGameObject>();
-                if (hoverLol != null && hoverLol != player)
-                {
-                    player.SetHoverTarget(hoverLol);
-                }
-                else
-                {
-                    player.ClearHoverTarget();
-                }
+                player.SetHoverTarget(first);
             }
             else
             {
                 player.ClearHoverTarget();
             }
 
-            // 左键（选择单位）逻辑
-            if (Input.GetMouseButtonDown(0) && hasHit)
+            // 左键（选择单位）逻辑：使用鼠标管理器缓存
+            if (mouseMgr.LeftClickThisFrame)
             {
-                LOLGameObject leftTarget = hit.collider.GetComponent<LOLGameObject>();
-                if (leftTarget != null && leftTarget != player)
+                var l = mouseMgr.LeftClickTarget;
+                if (l != null && l != player)
                 {
-                    OnLeftClickWithTarget?.Invoke(leftTarget);
+                    OnLeftClickWithTarget?.Invoke(l);
                 }
             }
 
-            // 右键点击逻辑（地面移动 / 攻击 / 追击）
-            if (Input.GetMouseButtonDown(1) && hasHit)
+            // 右键点击逻辑（地面移动 / 攻击 / 追击）：使用鼠标管理器缓存
+            if (mouseMgr.RightClickThisFrame)
             {
-                // 地面点击优先
-                Ground ground = hit.collider.GetComponent<Ground>();
-                if (ground != null)
+                // 优先地面
+                if (mouseMgr.HoveredGround != null && mouseMgr.HasHoveredPoint)
                 {
-                    player.InteractWithPosition(hit.point);
+                    player.InteractWithPosition(mouseMgr.HoveredPoint);
                 }
                 else
                 {
-                    LOLGameObject rightTarget = hit.collider.GetComponent<LOLGameObject>();
-                    if (rightTarget != null && rightTarget != player)
+                    var r = mouseMgr.RightClickTarget;
+                    if (r != null && r != player)
                     {
-                        player.InteractWithTarget(rightTarget);
-                        OnRightClickWithTarget?.Invoke(rightTarget);
+                        player.InteractWithTarget(r);
+                        OnRightClickWithTarget?.Invoke(r);
+                    }
+                    else if (mouseMgr.HasHoveredPoint)
+                    {
+                        player.InteractWithPosition(mouseMgr.HoveredPoint);
                     }
                 }
             }

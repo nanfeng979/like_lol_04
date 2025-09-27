@@ -22,6 +22,23 @@ namespace LikeLoL04
         private Ground hoveredGround;
         public Ground HoveredGround => hoveredGround;
 
+        // 鼠标当前命中的世界坐标（无论是单位还是地面），只记录本帧最前（最近）命中的点
+        private Vector3 hoveredPoint;
+        private bool hasHoveredPoint;
+        public bool HasHoveredPoint => hasHoveredPoint;
+        public Vector3 HoveredPoint => hoveredPoint; // 使用前请先判断 HasHoveredPoint
+
+    // 本帧左键与右键点击到的第一个单位（如果有）
+    private LOLGameObject leftClickTarget;
+    private bool leftClickThisFrame;
+    private LOLGameObject rightClickTarget;
+    private bool rightClickThisFrame;
+
+    public bool LeftClickThisFrame => leftClickThisFrame;
+    public LOLGameObject LeftClickTarget => leftClickTarget;
+    public bool RightClickThisFrame => rightClickThisFrame;
+    public LOLGameObject RightClickTarget => rightClickTarget;
+
         void Awake()
         {
             if (Instance == null)
@@ -50,6 +67,11 @@ namespace LikeLoL04
             // 每次检测开始前清空上一次的缓存
             cachedDetectedObjects.Clear();
             hoveredGround = null;
+            hasHoveredPoint = false;
+            leftClickThisFrame = false;
+            rightClickThisFrame = false;
+            leftClickTarget = null;
+            rightClickTarget = null;
 
             // 如果鼠标超出游戏窗口范围，则不做射线检测，直接返回（保持缓存为空）
             Vector3 mp = Input.mousePosition;
@@ -78,6 +100,12 @@ namespace LikeLoL04
                     if (seen.Add(go))
                     {
                         cachedDetectedObjects.Add(go);
+                        // 记录最先（最近）命中的坐标点
+                        if (!hasHoveredPoint)
+                        {
+                            hoveredPoint = h.point;
+                            hasHoveredPoint = true;
+                        }
                     }
                 }
             }
@@ -91,8 +119,31 @@ namespace LikeLoL04
                     if (g != null)
                     {
                         hoveredGround = g;
+                        if (!hasHoveredPoint)
+                        {
+                            hoveredPoint = h.point;
+                            hasHoveredPoint = true;
+                        }
                         break;
                     }
+                }
+            }
+
+            // 处理点击缓存（单位只取排序后的第一个）
+            if (Input.GetMouseButtonDown(0))
+            {
+                leftClickThisFrame = true;
+                if (cachedDetectedObjects.Count > 0)
+                {
+                    leftClickTarget = cachedDetectedObjects[0];
+                }
+            }
+            if (Input.GetMouseButtonDown(1))
+            {
+                rightClickThisFrame = true;
+                if (cachedDetectedObjects.Count > 0)
+                {
+                    rightClickTarget = cachedDetectedObjects[0];
                 }
             }
         }
