@@ -9,7 +9,8 @@ namespace LikeLoL04
         public float MaxHp { get; set; }
 
         public Sprite Avatar { get; private set; }
-        public int AttackValue { get; private set; }
+
+        public LOLGameObjectAttributes Attributes { get; private set; }
 
         public void FromLOLGameObject(LOLGameObject obj)
         {
@@ -19,14 +20,14 @@ namespace LikeLoL04
                 CurrentHp = obj.Data.CurrentHp;
                 MaxHp = obj.Data.MaxHp;
                 Avatar = obj.Data.Avatar;
-                AttackValue = obj.Data.AttackValue;
+                Attributes = obj.Data.Attributes;
             }
             else
             {
                 CurrentHp = 0;
                 MaxHp = 0;
                 Avatar = null;
-                AttackValue = 0;
+                Attributes = null;
             }
         }
 

@@ -23,14 +23,27 @@ namespace LikeLoL04
             if (model == null)
             {
                 avatarImage.sprite = null;
-                // attackText.text = "";
-                // currentHpAndMaxHpText.text = "";
+                
+                AttackText.text = "0";
+                MagicText.text = "0";
+                ArmorText.text = "0";
+                MagicResistText.text = "0";
+                AttackSpeedText.text = "0";
+                CoolDownText.text = "0";
+                CriticalStrikeText.text = "0%";
+                MoveSpeedText.text = "0";
                 return;
             }
             avatarImage.sprite = model.Avatar;
-            // attackText.text = model.AttackValue.ToString();
-            // currentHpAndMaxHpText.text = $"{model.CurrentHp}/{model.MaxHp}";
-            // currentHpBarImage.fillAmount = (float)model.CurrentHp / (float)model.MaxHp;
+
+            AttackText.text = model.Attributes != null ? model.Attributes.AttackValue.ToString() : "0";
+            MagicText.text = model.Attributes != null ? model.Attributes.MagicValue.ToString() : "0";
+            ArmorText.text = model.Attributes != null ? model.Attributes.ArmorValue.ToString() : "0";
+            MagicResistText.text = model.Attributes != null ? model.Attributes.MagicResistValue.ToString() : "0";
+            AttackSpeedText.text = model.Attributes != null ? model.Attributes.AttackSpeedValue.ToString() : "0";
+            CoolDownText.text = model.Attributes != null ? model.Attributes.CoolDownValue.ToString() : "0";
+            CriticalStrikeText.text = model.Attributes != null ? model.Attributes.CriticalStrikeValue.ToString() + "%" : "0%";
+            MoveSpeedText.text = model.Attributes != null ? model.Attributes.MoveSpeedValue.ToString() : "0";
         }
 
         public void UpdateHp(int currentHp, int maxHp)
@@ -64,5 +77,14 @@ namespace LikeLoL04
                     break;
             }
         }
+
+        public Text AttackText;
+        public Text MagicText;
+        public Text ArmorText;
+        public Text MagicResistText;
+        public Text AttackSpeedText;
+        public Text CoolDownText;
+        public Text CriticalStrikeText;
+        public Text MoveSpeedText;
     }
 }

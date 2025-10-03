@@ -102,13 +102,13 @@ namespace LikeLoL04
             // 获取XZ平面的位置（忽略Y轴）
             Vector3 currentPos = transform.position;
             Vector3 targetPos = TargetPosition;
-            
+
             // 创建忽略Y轴的2D位置向量
             Vector2 currentPos2D = new Vector2(currentPos.x, currentPos.z);
             Vector2 targetPos2D = new Vector2(targetPos.x, targetPos.z);
-            
+
             float distance = Vector2.Distance(currentPos2D, targetPos2D);
-            
+
             if (distance <= 0.5f)
             {
                 return true; // 已到达
@@ -116,19 +116,19 @@ namespace LikeLoL04
 
             Vector2 direction2D = (targetPos2D - currentPos2D).normalized;
             Vector2 move2D = direction2D * moveSpeed * Time.deltaTime;
-            
+
             if (move2D.magnitude > distance)
             {
                 move2D = direction2D * distance;
             }
-            
+
             // 更新X和Z轴，保持Y轴不变
             transform.position = new Vector3(
                 currentPos.x + move2D.x,
                 currentPos.y, // 保持原有Y值
                 currentPos.z + move2D.y
             );
-            
+
             return false;
         }
 
@@ -287,6 +287,20 @@ namespace LikeLoL04
 
         public Sprite Avatar;
 
+        public LOLGameObjectAttributes Attributes = new LOLGameObjectAttributes();
+    }
+
+
+    [System.Serializable]
+    public class LOLGameObjectAttributes
+    {
         public int AttackValue;
+        public int MagicValue;
+        public int ArmorValue;
+        public int MagicResistValue;
+        public float AttackSpeedValue;
+        public int CoolDownValue;
+        public int CriticalStrikeValue;
+        public int MoveSpeedValue;
     }
 }

@@ -28,7 +28,7 @@ namespace LikeLoL04
                 return;
             }
             avatarImage.sprite = model.Avatar;
-            attackText.text = model.AttackValue.ToString();
+            attackText.text = model.Attributes != null ? model.Attributes.AttackValue.ToString() : "0";
             currentHpAndMaxHpText.text = $"{model.CurrentHp}/{model.MaxHp}";
             currentHpBarImage.fillAmount = (float)model.CurrentHp / (float)model.MaxHp;
         }
