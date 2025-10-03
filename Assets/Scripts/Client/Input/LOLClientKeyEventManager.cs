@@ -19,6 +19,8 @@ public class LOLClientKeyEventManager : MonoBehaviour
     /// </summary>
     public event Action<int> OnSkillKey;
 
+    public event Action OnToggleAttributeViewShow;
+
     void Awake()
     {
         if (Instance == null)
@@ -35,6 +37,7 @@ public class LOLClientKeyEventManager : MonoBehaviour
     void Update()
     {
         HandleKeyDetection();
+        HandleToggleAttributeViewShow();
     }
 
     private void HandleKeyDetection()
@@ -64,6 +67,14 @@ public class LOLClientKeyEventManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             if (shiftHeld) OnShiftSkillKey?.Invoke(4); else OnSkillKey?.Invoke(4);
+        }
+    }
+
+    private void HandleToggleAttributeViewShow()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            OnToggleAttributeViewShow?.Invoke();
         }
     }
 }
