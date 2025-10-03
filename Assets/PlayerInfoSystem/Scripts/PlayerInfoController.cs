@@ -56,7 +56,19 @@ namespace LikeLoL04
             model.FromLOLGameObject(mainPlayer);
             ApplyModel();
 
+            view.HideAttributeView();
+
             MainPlayerSkillSystem.Instance.OnUpgradeSkill += OnUpgradeSkill;
+        }
+
+        void OnEnable()
+        {
+            LOLClientKeyEventManager.Instance.OnToggleAttributeViewShow += view.ToggleAttributeView;
+        }
+
+        void OnDisable()
+        {
+            LOLClientKeyEventManager.Instance.OnToggleAttributeViewShow -= view.ToggleAttributeView;
         }
 
         private void ApplyModel()

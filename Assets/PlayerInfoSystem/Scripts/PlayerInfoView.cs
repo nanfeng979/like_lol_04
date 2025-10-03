@@ -23,7 +23,7 @@ namespace LikeLoL04
             if (model == null)
             {
                 avatarImage.sprite = null;
-                
+
                 AttackText.text = "0";
                 MagicText.text = "0";
                 ArmorText.text = "0";
@@ -86,5 +86,24 @@ namespace LikeLoL04
         public Text CoolDownText;
         public Text CriticalStrikeText;
         public Text MoveSpeedText;
+
+        public RectTransform AttributeViewRectTransform;
+
+        public void ToggleAttributeView()
+        {
+            if (AttributeViewRectTransform != null)
+            {
+                bool isActive = AttributeViewRectTransform.gameObject.activeSelf;
+                AttributeViewRectTransform.gameObject.SetActive(!isActive);
+            }
+        }
+        
+        public void HideAttributeView()
+        {
+            if (AttributeViewRectTransform != null)
+            {
+                AttributeViewRectTransform.gameObject.SetActive(false);
+            }
+        }
     }
 }
