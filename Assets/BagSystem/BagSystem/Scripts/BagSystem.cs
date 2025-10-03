@@ -27,20 +27,24 @@ public class BagSystem : MonoBehaviour
         canvasGroup = GetComponent<CanvasGroup>();
         Hide();
     }
-
-    void Update()
+    void Start()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (LOLClientKeyEventManager.Instance != null)
         {
-            isVisible = !isVisible;
-            if (isVisible)
-            {
-                Show();
-            }
-            else
-            {
-                Hide();
-            }
+            LOLClientKeyEventManager.Instance.OnToggleBagSystemShow += Toggle;
+        }
+    }
+
+    public void Toggle()
+    {
+        isVisible = !isVisible;
+        if (isVisible)
+        {
+            Show();
+        }
+        else
+        {
+            Hide();
         }
     }
 
