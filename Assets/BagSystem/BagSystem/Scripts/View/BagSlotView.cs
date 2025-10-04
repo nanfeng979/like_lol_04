@@ -10,7 +10,7 @@ namespace Game.Bag.View
     /// 单个格子的显示：图标与数量文本（背景由 BagView 统一渲染）。
     /// 支持拖拽交换：视图 -> 控制器 -> 模型 -> 控制器 -> 视图。
     /// </summary>
-    public class BagSlotView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+    public class BagSlotView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [Header("显示")]
         [Tooltip("道具图标 Image")]
@@ -131,10 +131,12 @@ namespace Game.Bag.View
         }
         #endregion
 
-        #region 右键菜单
-        public void OnPointerClick(PointerEventData eventData)
+        #region 外部右键调用
+        /// <summary>
+        /// 由全局输入管理（LOLClientMouseEventManager）在检测到右键点击 UI 且命中该槽位时调用。
+        /// </summary>
+        public void HandleRightClickExternal()
         {
-            if (eventData.button != PointerEventData.InputButton.Right) return;
             if (controller == null) return;
             if (!controller.HasItemAt(slotIndex)) return;
             var currentItemData = controller.GetItemDataAtIndex(slotIndex);

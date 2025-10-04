@@ -41,18 +41,6 @@ namespace LikeLoL04
 
         void Start()
         {
-            // EventBus.On("AddHp", (param) =>
-            // {
-            //     if (param.Length > 0 && param[0] is LuaTable luaTable)
-            //     {
-            //         var list = LuaTableToList(luaTable);
-            //         int addHp = list[0] is string str ? int.Parse(str) : (int)(long)list[0];
-            //         int currentHp = int.Parse(HpText.text);
-            //         currentHp += addHp;
-            //         HpText.text = currentHp.ToString();
-            //     }
-            // });
-
             model.FromLOLGameObject(mainPlayer);
             ApplyModel();
 
@@ -74,29 +62,6 @@ namespace LikeLoL04
         private void ApplyModel()
         {
             view?.ApplyModel(model);
-        }
-
-        public static List<object> LuaTableToList(LuaTable table)
-        {
-            var list = new List<object>();
-            int index = 1;
-
-            while (true)
-            {
-                object value;
-                table.Get(index, out value);
-                if (value != null)
-                {
-                    list.Add(value);
-                    index++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return list;
         }
 
         public void OnUpgradeSkill(int skillType, int skillLevel)

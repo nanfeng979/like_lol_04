@@ -249,6 +249,16 @@ namespace LikeLoL04
 
         public LOLGameObjectData Data;
 
+        public int GetHealthPercent()
+        {
+            return Data.CurrentHp;
+        }
+
+        public void SetHealthPercent(int percent)
+        {
+            Data.CurrentHp = percent;
+        }
+
     }
 
     [System.Serializable]
@@ -302,5 +312,10 @@ namespace LikeLoL04
         public int CoolDownValue;
         public int CriticalStrikeValue;
         public int MoveSpeedValue;
+
+        public void UpdateAttackValue(int value)
+        {
+            AttackValue = value;
+        }
     }
 }

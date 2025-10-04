@@ -62,7 +62,6 @@ namespace Game.Bag.View
 
         public List<GameObject> CreateBackgrounds(int count)
         {
-            Debug.Log($"BagView：创建 {count} 个背景格子。");
             List<GameObject> _backgrounds = new List<GameObject>();
 
             if (backgroundRoot == null || backgroundPrefab == null)

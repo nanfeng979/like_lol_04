@@ -18,18 +18,13 @@ namespace Game.Bag.Controller
 
         #region Accessors
         /// <summary>
-        /// 只读访问道具静态表。
-        /// </summary>
-        public ItemDatabase ItemDatabase => _itemDatabase;
-
-        /// <summary>
         /// 只读访问当前背包数据。
         /// </summary>
         public BagDatabase CurrentBag => _bagDatabase;
 
-    /// <summary>
-    /// 获取指定索引的展示名（来自静态表 ItemData；无表回退 itemId）。
-    /// </summary>
+        /// <summary>
+        /// 获取指定索引的展示名（来自静态表 ItemData；无表回退 itemId）。
+        /// </summary>
         public string GetDisplayNameAt(int index)
         {
             if (_bagDatabase == null || _bagDatabase.items == null) return null;

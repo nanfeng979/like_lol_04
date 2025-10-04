@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace LikeLoL04
 {
@@ -80,7 +81,33 @@ namespace LikeLoL04
                 return;
             }
 
-            // 确保LOLGameConfig实例存在
+            // UI 优先：若本帧有右键，先做 UI Raycast，如果命中背包槽位则消费并返回，不再进行场景检测
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (UnityEngine.EventSystems.EventSystem.current != null)
+                {
+                    var ped = new PointerEventData(UnityEngine.EventSystems.EventSystem.current)
+                    {
+                        position = Input.mousePosition
+                    };
+                    var uiResults = new List<RaycastResult>();
+                    UnityEngine.EventSystems.EventSystem.current.RaycastAll(ped, uiResults);
+                    for (int i = 0; i < uiResults.Count; i++)
+                    {
+                        var go = uiResults[i].gameObject;
+                        if (go == null) continue;
+                        var slot = go.GetComponentInParent<Game.Bag.View.BagSlotView>();
+                        if (slot != null)
+                        {
+                            slot.HandleRightClickExternal();
+                            // UI 已消费右键：直接返回，不做场景射线
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // 确保LOLGameConfig实例存在（场景逻辑）
             if (LOLGameConfig.Instance == null) return;
 
             // 从鼠标位置发射射线
