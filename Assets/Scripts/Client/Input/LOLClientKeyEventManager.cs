@@ -83,7 +83,7 @@ public class LOLClientKeyEventManager : MonoBehaviour
 
     private void HandleToggleBagSystemShow()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.I))
         {
             OnToggleBagSystemShow?.Invoke();
         }
