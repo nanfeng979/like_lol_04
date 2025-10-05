@@ -23,6 +23,8 @@ public class LOLClientKeyEventManager : MonoBehaviour
 
     public event Action OnToggleBagSystemShow;
 
+    public event Action OnToggleStoreSystemShow;
+
     void Awake()
     {
         if (Instance == null)
@@ -41,6 +43,7 @@ public class LOLClientKeyEventManager : MonoBehaviour
         HandleKeyDetection();
         HandleToggleAttributeViewShow();
         HandleToggleBagSystemShow();
+        HandleToggleStoreSystemShow();
     }
 
     private void HandleKeyDetection()
@@ -86,6 +89,14 @@ public class LOLClientKeyEventManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             OnToggleBagSystemShow?.Invoke();
+        }
+    }
+
+    private void HandleToggleStoreSystemShow()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            OnToggleStoreSystemShow?.Invoke();
         }
     }
 }
