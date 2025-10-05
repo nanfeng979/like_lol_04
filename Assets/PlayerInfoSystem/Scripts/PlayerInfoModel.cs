@@ -36,5 +36,13 @@ namespace LikeLoL04
             CurrentHp = currentHp;
             MaxHp = maxHp;
         }
+
+        public void UpdateAttackValue(int attackValue)
+        {
+            if (Attributes != null)
+            {
+                Attributes.AttackValue = attackValue;
+            }
+        }
     }
 }

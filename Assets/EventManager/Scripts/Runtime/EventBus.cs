@@ -27,6 +27,15 @@ namespace LikeLoL04.EventSystem
             }
         }
 
+        // 取消所有订阅
+        public static void Off(string eventName)
+        {
+            if (_eventTable.ContainsKey(eventName))
+            {
+                _eventTable[eventName] = null;
+            }
+        }
+
         // 发送事件
         public static void Emit(string eventName, params object[] args)
         {

@@ -2,6 +2,7 @@
   "grid": { "rows": 4, "columns": 5 },
   "items": [
     { "index": 0, "itemId": "potion", "quantity": 12 },
+    { "index": 1, "itemId": "DoranBlade", "quantity": 1 },
     { "index": 2, "itemId": "controlGuards", "quantity": 24 },
     { "index": 7, "itemId": "sword", "quantity": 1 }
   ]

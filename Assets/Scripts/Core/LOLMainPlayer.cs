@@ -26,6 +26,18 @@ namespace LikeLoL04
                     Debug.Log($"AddHp: {addHp}, CurrentHp: {currentHp}");
                 }
             });
+
+            EventBus.On("AddAttack", (param) =>
+            {
+                if (param.Length > 0 && param[0] is LuaTable luaTable)
+                {
+                    var list = LuaTableToList(luaTable);
+                    int addAttack = list[0] is string str ? int.Parse(str) : (int)(long)list[0];
+                    int currentAttack = mainPlayer.GetAttackValue();
+                    currentAttack += addAttack;
+                    mainPlayer.SetAttackValue(currentAttack);
+                }
+            });
         }
 
         public static List<object> LuaTableToList(LuaTable table)

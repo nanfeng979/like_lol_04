@@ -259,6 +259,16 @@ namespace LikeLoL04
             Data.CurrentHp = percent;
         }
 
+        public int GetAttackValue()
+        {
+            return Data.Attributes.AttackValue;
+        }
+
+        public void SetAttackValue(int value)
+        {
+            Data.Attributes.UpdateAttackValue(value);
+        }
+
     }
 
     [System.Serializable]
@@ -316,6 +326,7 @@ namespace LikeLoL04
         public void UpdateAttackValue(int value)
         {
             AttackValue = value;
+            EventBus.Emit("AttackValueChanged", AttackValue);
         }
     }
 }

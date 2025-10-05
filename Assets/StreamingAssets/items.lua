@@ -27,6 +27,15 @@ return {
             displayName = "控制守卫",
             iconAddress = "Icons/controlGuards.png",
             maxStack = 99
+        },
+        {
+            itemId = "DoranBlade",
+            displayName = "多兰之刃",
+            iconAddress = "Icons/DoranBlade.png",
+            maxStack = 99,
+            usedAction = function()
+                CS.LikeLoL04.EventSystem.EventBus.Emit("AddAttack", { "10" })
+            end
         }
     }
 }

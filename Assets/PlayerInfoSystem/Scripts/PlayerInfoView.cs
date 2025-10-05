@@ -97,13 +97,18 @@ namespace LikeLoL04
                 AttributeViewRectTransform.gameObject.SetActive(!isActive);
             }
         }
-        
+
         public void HideAttributeView()
         {
             if (AttributeViewRectTransform != null)
             {
                 AttributeViewRectTransform.gameObject.SetActive(false);
             }
+        }
+        
+        public void UpdateAttackValue(int attackValue)
+        {
+            AttackText.text = attackValue.ToString();
         }
     }
 }

@@ -47,6 +47,21 @@ namespace LikeLoL04
             view.HideAttributeView();
 
             MainPlayerSkillSystem.Instance.OnUpgradeSkill += OnUpgradeSkill;
+
+            EventBus.On("AttackValueChanged", (param) =>
+            {
+                if (param.Length > 0 && param[0] is int attackValue)
+                {
+                    model.UpdateAttackValue(attackValue);
+                    m_ApplyAttackValue();
+                }
+            });
+        }
+
+        void OnDestroy()
+        {
+            MainPlayerSkillSystem.Instance.OnUpgradeSkill -= OnUpgradeSkill;
+            EventBus.Off("AttackValueChanged");
         }
 
         void OnEnable()
@@ -67,6 +82,11 @@ namespace LikeLoL04
         public void OnUpgradeSkill(int skillType, int skillLevel)
         {
             view.OnUpgradeSkill(skillType, skillLevel);
+        }
+
+        private void m_ApplyAttackValue()
+        {
+            view?.UpdateAttackValue(model?.Attributes?.AttackValue ?? 0);
         }
     }
 }
