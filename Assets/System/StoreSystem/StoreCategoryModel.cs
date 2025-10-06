@@ -6,5 +6,5 @@ using UnityEngine;
 public class StoreCategoryModel
 {
     public string title;
-    public List<StoreItemModel> itemList = new List<StoreItemModel>();
+    public List<StoreItemData> itemList = new List<StoreItemData>();
 }

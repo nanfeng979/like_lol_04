@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class StoreItemModel : IMVC_Model
+public class StoreItemData
 {
     public string itemName;
     public string iconAddress;

@@ -19,19 +19,18 @@ namespace LikeLoL04
             });
         }
 
-        public void SetBeSelectStoreItem(StoreItemModel storeItemModel)
+        public void SetBeSelectStoreItem(StoreItemData storeItemData)
         {
-            StoreItemView beSelectStoreItem = view.beSelectStoreItem.GetComponent<StoreItemView>();
-            beSelectStoreItem.SetItem(storeItemModel);
+            view.UpdateCurrent(storeItemData);
 
-            string beSelectItemName = storeItemModel.itemName;
+            string beSelectItemName = storeItemData.itemName;
             StoreCraftingData storeCraftingModelData = model.GetCraftingDataByName(beSelectItemName);
             if (storeCraftingModelData != null)
             {
-                List<StoreItemModel> parents = new List<StoreItemModel>();
+                List<StoreItemData> parents = new List<StoreItemData>();
                 foreach (var parentName in storeCraftingModelData.Parents)
                 {
-                    StoreItemModel parentItem = StoreSystemController.Instance.GetItemByName(parentName);
+                    StoreItemData parentItem = StoreSystemController.Instance.GetItemByName(parentName);
                     if (parentItem != null)
                     {
                         parents.Add(parentItem);
@@ -39,11 +38,11 @@ namespace LikeLoL04
                 }
                 view.UpdateParents(parents);
                 // 第一层 Children
-                var layer1Children = new List<StoreItemModel>();
-                var layer2Children = new List<StoreItemModel>();
+                var layer1Children = new List<StoreItemData>();
+                var layer2Children = new List<StoreItemData>();
                 foreach (var childName in storeCraftingModelData.Children)
                 {
-                    StoreItemModel childItem = StoreSystemController.Instance.GetItemByName(childName);
+                    StoreItemData childItem = StoreSystemController.Instance.GetItemByName(childName);
                     if (childItem != null)
                     {
                         layer1Children.Add(childItem);

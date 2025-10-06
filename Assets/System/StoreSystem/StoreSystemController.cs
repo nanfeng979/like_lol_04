@@ -24,19 +24,9 @@ namespace LikeLoL04
             });
         }
 
-        public StoreItemModel GetItemByName(string itemName)
+        public StoreItemData GetItemByName(string itemName)
         {
-            foreach (var category in model.Categories)
-            {
-                foreach (var item in category.itemList)
-                {
-                    if (item.itemName == itemName)
-                    {
-                        return item;
-                    }
-                }
-            }
-            return null;
+            return model.GetItemByName(itemName);
         }
     }
 }

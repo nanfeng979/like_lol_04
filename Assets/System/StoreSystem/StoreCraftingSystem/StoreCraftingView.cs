@@ -32,7 +32,13 @@ namespace LikeLoL04
             }
         }
 
-        public void UpdateParents(List<StoreItemModel> parents)
+        public void UpdateCurrent(StoreItemData current)
+        {
+            StoreItemView currentView = beSelectStoreItem.GetComponent<StoreItemView>();
+            currentView.SetItem(current);
+        }
+
+        public void UpdateParents(List<StoreItemData> parents)
         {
             foreach (RectTransform child in BeSelectItemParents)
             {
@@ -63,7 +69,7 @@ namespace LikeLoL04
             }
         }
 
-        public void MultiLayerUpdateChildren(List<StoreItemModel> layer1, List<StoreItemModel> layer2)
+        public void MultiLayerUpdateChildren(List<StoreItemData> layer1, List<StoreItemData> layer2)
         {
             // 先全部隐藏子物体
             for (int i = 0; i < m_ChildRow1.childCount; i++)
@@ -118,7 +124,7 @@ namespace LikeLoL04
                 int index = i;
                 childItemView.OnLeftClickAction = () =>
                 {
-                    StoreItemModel target;
+                    StoreItemData target;
                     if (index < (layer1?.Count ?? 0))
                     {
                         target = layer1[index];
@@ -148,7 +154,7 @@ namespace LikeLoL04
         }
 
         // 兼容旧调用（只传一层）
-        public void UpdateChildren(List<StoreItemModel> onlyLayer1)
+        public void UpdateChildren(List<StoreItemData> onlyLayer1)
         {
             MultiLayerUpdateChildren(onlyLayer1, null);
         }

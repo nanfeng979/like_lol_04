@@ -19,7 +19,7 @@ namespace LikeLoL04
 
         private RectTransform m_itemRoot => transform.Find("ItemRoot").GetComponent<RectTransform>();
 
-        public void AddItems(List<StoreItemModel> items)
+        public void AddItems(List<StoreItemData> items)
         {
             m_itemRoot.GetChild(0).gameObject.SetActive(false);
 

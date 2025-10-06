@@ -18,15 +18,15 @@ namespace LikeLoL04
 
         public Action OnLeftClickAction { get; set; }
 
-        public void SetItem(StoreItemModel storeItemModel)
+        public void SetItem(StoreItemData storeItemData)
         {
-            SetIconByAddress(storeItemModel);
-            SetPrice(storeItemModel.price);
+            SetIconByAddress(storeItemData);
+            SetPrice(storeItemData.price);
         }
 
-        public void SetIconByAddress(StoreItemModel storeItemModel)
+        public void SetIconByAddress(StoreItemData storeItemData)
         {
-            string iconAddress = storeItemModel.iconAddress + "/" + storeItemModel.itemName + ".png";
+            string iconAddress = storeItemData.iconAddress + "/" + storeItemData.itemName + ".png";
             AddressablesUtils.LoadAsset<Sprite>(iconAddress, sprite =>
             {
                 m_icon.sprite = sprite;

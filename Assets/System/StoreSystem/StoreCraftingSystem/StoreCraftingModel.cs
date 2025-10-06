@@ -22,23 +22,23 @@ namespace LikeLoL04
             }
         }
 
-        public Dictionary<string, StoreCraftingData> craftingDict = new Dictionary<string, StoreCraftingData>();
+        private Dictionary<string, StoreCraftingData> m_craftingDict = new Dictionary<string, StoreCraftingData>();
 
-        public void ListToDict()
+        private void ListToDict()
         {
-            craftingDict.Clear();
+            m_craftingDict.Clear();
             foreach (var crafting in CraftingTable)
             {
-                if (!craftingDict.ContainsKey(crafting.Name))
+                if (!m_craftingDict.ContainsKey(crafting.Name))
                 {
-                    craftingDict[crafting.Name] = crafting;
+                    m_craftingDict[crafting.Name] = crafting;
                 }
             }
         }
 
         public StoreCraftingData GetCraftingDataByName(string name)
         {
-            if (craftingDict.TryGetValue(name, out StoreCraftingData data))
+            if (m_craftingDict.TryGetValue(name, out StoreCraftingData data))
             {
                 return data;
             }
