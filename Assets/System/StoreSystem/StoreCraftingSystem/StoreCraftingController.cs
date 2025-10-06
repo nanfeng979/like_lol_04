@@ -11,13 +11,11 @@ namespace LikeLoL04
             : MVC_Controller<StoreCraftingController, StoreCraftingView, StoreCraftingModel>
     {
 
-        private List<StoreCraftingModel> m_craftingTable = new List<StoreCraftingModel>();
-
         void Start()
         {
-            JsonUtils.LoadJson<List<StoreCraftingModel>>("Assets/System/StoreSystem/StoreCraftingSystem/StoreCraftingTable.json", craftings =>
+            JsonUtils.LoadJson<List<StoreCraftingData>>("Assets/System/StoreSystem/StoreCraftingSystem/StoreCraftingTable.json", craftings =>
             {
-                m_craftingTable = craftings;
+                model.CraftingTable = craftings;
             });
         }
 
@@ -27,11 +25,11 @@ namespace LikeLoL04
             beSelectStoreItem.SetItem(storeItemModel);
 
             string beSelectItemName = storeItemModel.itemName;
-            StoreCraftingModel craftingModel = m_craftingTable.Find(c => c.Name == beSelectItemName);
-            if (craftingModel != null)
+            StoreCraftingData storeCraftingModelData = model.GetCraftingDataByName(beSelectItemName);
+            if (storeCraftingModelData != null)
             {
                 List<StoreItemModel> parents = new List<StoreItemModel>();
-                foreach (var parentName in craftingModel.Parents)
+                foreach (var parentName in storeCraftingModelData.Parents)
                 {
                     StoreItemModel parentItem = StoreSystemController.Instance.GetItemByName(parentName);
                     if (parentItem != null)
@@ -43,14 +41,14 @@ namespace LikeLoL04
                 // 第一层 Children
                 var layer1Children = new List<StoreItemModel>();
                 var layer2Children = new List<StoreItemModel>();
-                foreach (var childName in craftingModel.Children)
+                foreach (var childName in storeCraftingModelData.Children)
                 {
                     StoreItemModel childItem = StoreSystemController.Instance.GetItemByName(childName);
                     if (childItem != null)
                     {
                         layer1Children.Add(childItem);
                         // 查找该 child 的 crafting 数据，收集第二层（即孙辈）
-                        var childCraft = m_craftingTable.Find(c => c.Name == childName);
+                        var childCraft = model.GetCraftingDataByName(childName);
                         if (childCraft != null && childCraft.Children != null)
                         {
                             foreach (var grand in childCraft.Children)
