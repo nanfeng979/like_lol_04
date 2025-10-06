@@ -1,43 +1,41 @@
 [
-	{
-		"title": "初始",
-		"itemList": [
-			{ "iconAddress": "Assets/LOLItems/Initial/DarkSeal.png", "price": 350 },
-			{ "iconAddress": "Assets/LOLItems/Initial/TearOfTheGoddess.png", "price": 400 },
-			{ "iconAddress": "Assets/LOLItems/Initial/DoranRing.png", "price": 400 },
-			{ "iconAddress": "Assets/LOLItems/Initial/DoranBlade.png", "price": 450 },
-			{ "iconAddress": "Assets/LOLItems/Initial/TheExtract.png", "price": 450 },
-			{ "iconAddress": "Assets/LOLItems/Initial/DoranShield.png", "price": 450 }
-		]
-	},
-	{
-		"title": "基础",
-		"itemList": [
-			{ "iconAddress": "Assets/LOLItems/basic/FaerieCharm.png", "price": 200 },
-			{ "iconAddress": "Assets/LOLItems/basic/Dagger.png", "price": 250 },
-			{ "iconAddress": "Assets/LOLItems/basic/LuminaryVeil.png", "price": 250 },
-			{ "iconAddress": "Assets/LOLItems/basic/SapphireCrystal.png", "price": 300 },
-			{ "iconAddress": "Assets/LOLItems/basic/ClothArmor.png", "price": 300 },
-			{ "iconAddress": "Assets/LOLItems/basic/HealthPotion.png", "price": 300 },
-			{ "iconAddress": "Assets/LOLItems/basic/LongSword.png", "price": 350 },
-			{ "iconAddress": "Assets/LOLItems/basic/AmplifyingTome.png", "price": 400 },
-			{ "iconAddress": "Assets/LOLItems/basic/MagicMantle.png", "price": 400 },
-			{ "iconAddress": "Assets/LOLItems/basic/RubyCrystal.png", "price": 400 },
-			{ "iconAddress": "Assets/LOLItems/basic/CloakOfAgility.png", "price": 600 },
-			{ "iconAddress": "Assets/LOLItems/basic/BlastingWand.png", "price": 850 },
-			{ "iconAddress": "Assets/LOLItems/basic/Pickaxe.png", "price": 850 },
-			{ "iconAddress": "Assets/LOLItems/basic/NeedlesslyLargeRod.png", "price": 1200 },
-			{ "iconAddress": "Assets/LOLItems/basic/BFSword.png", "price": 1300 }
-		]
-	},
-	{
-		"title": "史诗",
-		"itemList": [
-		]
-	},
-	{
-		"title": "传说",
-		"itemList": [
-		]
-	}
+  {
+    "title": "初始",
+    "itemList": [
+      { "itemName": "DarkSeal", "iconAddress": "Assets/LOLItems/Initial", "price": 350 },
+      { "itemName": "TearOfTheGoddess", "iconAddress": "Assets/LOLItems/Initial", "price": 400 },
+      { "itemName": "DoranRing", "iconAddress": "Assets/LOLItems/Initial", "price": 400 },
+      { "itemName": "DoranBlade", "iconAddress": "Assets/LOLItems/Initial", "price": 450 },
+      { "itemName": "TheExtract", "iconAddress": "Assets/LOLItems/Initial", "price": 450 },
+      { "itemName": "DoranShield", "iconAddress": "Assets/LOLItems/Initial", "price": 450 }
+    ]
+  },
+  {
+    "title": "基础",
+    "itemList": [
+      { "itemName": "FaerieCharm", "iconAddress": "Assets/LOLItems/basic", "price": 200 },
+      { "itemName": "Dagger", "iconAddress": "Assets/LOLItems/basic", "price": 250 },
+      { "itemName": "LuminaryVeil", "iconAddress": "Assets/LOLItems/basic", "price": 250 },
+      { "itemName": "SapphireCrystal", "iconAddress": "Assets/LOLItems/basic", "price": 300 },
+      { "itemName": "ClothArmor", "iconAddress": "Assets/LOLItems/basic", "price": 300 },
+      { "itemName": "HealthPotion", "iconAddress": "Assets/LOLItems/basic", "price": 300 },
+      { "itemName": "LongSword", "iconAddress": "Assets/LOLItems/basic", "price": 350 },
+      { "itemName": "AmplifyingTome", "iconAddress": "Assets/LOLItems/basic", "price": 400 },
+      { "itemName": "MagicMantle", "iconAddress": "Assets/LOLItems/basic", "price": 400 },
+      { "itemName": "RubyCrystal", "iconAddress": "Assets/LOLItems/basic", "price": 400 },
+      { "itemName": "CloakOfAgility", "iconAddress": "Assets/LOLItems/basic", "price": 600 },
+      { "itemName": "BlastingWand", "iconAddress": "Assets/LOLItems/basic", "price": 850 },
+      { "itemName": "Pickaxe", "iconAddress": "Assets/LOLItems/basic", "price": 850 },
+      { "itemName": "NeedlesslyLargeRod", "iconAddress": "Assets/LOLItems/basic", "price": 1200 },
+      { "itemName": "BFSword", "iconAddress": "Assets/LOLItems/basic", "price": 1300 }
+    ]
+  },
+  {
+    "title": "史诗",
+    "itemList": []
+  },
+  {
+    "title": "传说",
+    "itemList": []
+  }
 ]

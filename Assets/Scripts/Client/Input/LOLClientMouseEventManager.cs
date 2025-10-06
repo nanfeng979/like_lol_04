@@ -81,6 +81,32 @@ namespace LikeLoL04
                 return;
             }
 
+            // 左键点击检测
+            // UI 优先：左键处理（通用接口 ILeftClick）
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (UnityEngine.EventSystems.EventSystem.current != null)
+                {
+                    var ped = new PointerEventData(UnityEngine.EventSystems.EventSystem.current)
+                    {
+                        position = Input.mousePosition
+                    };
+                    var uiResults = new List<RaycastResult>();
+                    UnityEngine.EventSystems.EventSystem.current.RaycastAll(ped, uiResults);
+                    for (int i = 0; i < uiResults.Count; i++)
+                    {
+                        var go = uiResults[i].gameObject;
+                        if (go == null) continue;
+                        var leftHandler = go.GetComponentInParent<ILeftClick>();
+                        if (leftHandler != null)
+                        {
+                            leftHandler.leftClickExecute();
+                            return; // UI 已消费左键
+                        }
+                    }
+                }
+            }
+
             // UI 优先：若本帧有右键，先做 UI Raycast，如果命中背包槽位则消费并返回，不再进行场景检测
             if (Input.GetMouseButtonDown(1))
             {

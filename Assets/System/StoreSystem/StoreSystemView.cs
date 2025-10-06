@@ -15,25 +15,20 @@ namespace LikeLoL04
         [SerializeField]
         private GameObject categoryPrefab;
 
-        void Start()
+        public void InitializeCategories(List<StoreCategoryModel> categories)
         {
-            InitializeCategories();
-        }
-
-        private void InitializeCategories()
-        {
-
-            JsonUtils.LoadJson<List<StoreCategoryModel>>("Assets/System/StoreSystem/StoreCategoryJson.json", categories =>
+            foreach (var category in categories)
             {
-                foreach (var category in categories)
-                {
-                    GameObject categoryGO = Instantiate(categoryPrefab, itemsContent);
-                    categoryGO.name = category.title;
-                    StoreCategoryView categoryView = categoryGO.GetComponent<StoreCategoryView>();
-                    categoryView.SetTitle(category.title);
-                    categoryView.AddItems(category.itemList);
-                }
-            });
+                GameObject categoryGO = Instantiate(categoryPrefab, itemsContent);
+                categoryGO.name = category.title;
+                StoreCategoryView categoryView = categoryGO.GetComponent<StoreCategoryView>();
+                categoryView.SetTitle(category.title);
+                categoryView.AddItems(category.itemList);
+            }
         }
+
+        [SerializeField]
+        public RectTransform beSelectStoreItem;
+
     }
 }

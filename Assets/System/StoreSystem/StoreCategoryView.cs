@@ -22,18 +22,19 @@ namespace LikeLoL04
         public void AddItems(List<StoreItemModel> items)
         {
             m_itemRoot.GetChild(0).gameObject.SetActive(false);
-            
+
             foreach (var item in items)
             {
                 GameObject itemGO = Instantiate(m_itemRoot.GetChild(0).gameObject);
                 itemGO.SetActive(true);
                 itemGO.transform.SetParent(m_itemRoot);
+                itemGO.name = item.itemName;
                 StoreItemView itemView = itemGO.GetComponent<StoreItemView>();
-                AddressablesUtils.LoadAsset<Sprite>(item.iconAddress, sprite =>
+                itemView.OnLeftClickAction = () =>
                 {
-                    itemView.SetIcon(sprite);
-                });
-                itemView.SetPrice(item.price);
+                    StoreSystemController.Instance.SetBeSelectStoreItem(item);
+                };
+                itemView.SetItem(item);
             }
         }
     }

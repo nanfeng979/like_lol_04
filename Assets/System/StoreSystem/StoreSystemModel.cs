@@ -4,16 +4,6 @@ using UnityEngine;
 
 public class StoreSystemModel : IMVC_Model
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    private List<StoreCategoryModel> m_categories = new List<StoreCategoryModel>();
+    public List<StoreCategoryModel> Categories { get { return m_categories; } set { m_categories = value; } }
 }
