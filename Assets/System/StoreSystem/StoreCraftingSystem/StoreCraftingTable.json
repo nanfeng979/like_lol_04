@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "Dagger",
+    "Parents": ["Zeal", "PhantomDancer"],
+    "Children": []
+  },
+  {
+    "Name": "Zeal",
+    "Parents": ["PhantomDancer"],
+    "Children": ["Dagger"]
+  },
+  {
+    "Name": "PhantomDancer",
+    "Parents": [],
+    "Children": ["Dagger", "Zeal", "Dagger"]
+  }
+]

@@ -32,7 +32,7 @@ namespace LikeLoL04
                 StoreItemView itemView = itemGO.GetComponent<StoreItemView>();
                 itemView.OnLeftClickAction = () =>
                 {
-                    StoreSystemController.Instance.SetBeSelectStoreItem(item);
+                    StoreCraftingController.Instance.SetBeSelectStoreItem(item);
                 };
                 itemView.SetItem(item);
             }

@@ -24,10 +24,19 @@ namespace LikeLoL04
             });
         }
 
-        public void SetBeSelectStoreItem(StoreItemModel storeItemModel)
+        public StoreItemModel GetItemByName(string itemName)
         {
-            StoreItemView itemView = view.beSelectStoreItem.GetComponent<StoreItemView>();
-            itemView.SetItem(storeItemModel);
+            foreach (var category in model.Categories)
+            {
+                foreach (var item in category.itemList)
+                {
+                    if (item.itemName == itemName)
+                    {
+                        return item;
+                    }
+                }
+            }
+            return null;
         }
     }
 }

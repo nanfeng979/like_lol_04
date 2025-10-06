@@ -32,10 +32,14 @@
   },
   {
     "title": "史诗",
-    "itemList": []
+    "itemList": [
+      { "itemName": "Zeal", "iconAddress": "Assets/LOLItems/epic", "price": 200 }
+    ]
   },
   {
     "title": "传说",
-    "itemList": []
+    "itemList": [
+      { "itemName": "PhantomDancer", "iconAddress": "Assets/LOLItems/legend", "price": 200 }
+    ]
   }
 ]

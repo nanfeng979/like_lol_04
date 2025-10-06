@@ -26,9 +26,5 @@ namespace LikeLoL04
                 categoryView.AddItems(category.itemList);
             }
         }
-
-        [SerializeField]
-        public RectTransform beSelectStoreItem;
-
     }
 }
