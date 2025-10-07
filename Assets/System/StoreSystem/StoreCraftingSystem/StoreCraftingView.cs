@@ -176,15 +176,12 @@ namespace LikeLoL04
             {
                 GameObject childItem = m_ChildRow1.GetChild(i).gameObject;
                 childItem.SetActive(true);
-                // layer1ItemPosX.Add(childItem.GetComponent<RectTransform>().anchoredPosition.x);
                 StoreItemView childItemView = childItem.GetComponent<StoreItemView>();
                 int index = i; // 捕获当前的 i 值
-                // childItemView.OnLeftClickAction = () =>
-                // {
-                //     StoreCraftingController.Instance.SetBeSelectStoreItem(layer1DataList[index]);
-                // };
                 childItemView.SetItem(layer1DataList[index]);
             }
+
+            AdaptChildRow1Positions(layer1DataList.Count);
 
             Canvas.ForceUpdateCanvases(); // 强制更新布局
 
@@ -235,35 +232,34 @@ namespace LikeLoL04
                         childItem.SetActive(true);
                         StoreItemView childItemView = childItem.GetComponent<StoreItemView>();
                         int index = j; // 捕获当前的 j 值
-                        // childItemView.OnLeftClickAction = () =>
-                        // {
-                        //     StoreCraftingController.Instance.SetBeSelectStoreItem(layer2CurrentColDataList[index]);
-                        // };
                         childItemView.SetItem(layer2CurrentColDataList[index]);
                     }
                 }
-
-                // 每个第一层物品对应一行第二层物品
-                // for (int j = 0; j < layer2DataList.Count; j++)
-                // {
-                //     GameObject childItem;
-                //     childItem = m_ChildRow2.GetChild(i).gameObject;
-                //     childItem.SetActive(true);
-                //     StoreItemView childItemView = childItem.GetComponent<StoreItemView>();
-                //     int index = j; // 捕获当前的 j 值
-                //     // childItemView.OnLeftClickAction = () =>
-                //     // {
-                //     //     StoreCraftingController.Instance.SetBeSelectStoreItem(layer2DataList[index]);
-                //     // };
-                //     childItemView.SetItem(layer2DataList[index]);
-
-                    //     // 设置位置
-                    //     RectTransform childRect = childItem.GetComponent<RectTransform>();
-                    //     Vector2 pos = childRect.anchoredPosition;
-                    //     pos.x = layer1ItemPosX[i]; // 对齐到对应的第一层物品位置
-                    //     childRect.anchoredPosition = pos;
-                    // }
             }
         }
+
+        private void AdaptChildRow1Positions(int layer1DataListCount)
+        {
+            switch (layer1DataListCount)
+            {
+                case 1:
+                    m_ChildRow1.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+                    break;
+                case 2:
+                    const float gap2 = 67f;
+                    m_ChildRow1.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(-gap2, 0);
+                    m_ChildRow1.GetChild(1).GetComponent<RectTransform>().anchoredPosition = new Vector2(gap2, 0);
+                    break;
+                case 3:
+                    const float gap3 = 134f;
+                    m_ChildRow1.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(-gap3, 0);
+                    m_ChildRow1.GetChild(1).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+                    m_ChildRow1.GetChild(2).GetComponent<RectTransform>().anchoredPosition = new Vector2(gap3, 0);
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 }
