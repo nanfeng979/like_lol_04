@@ -24,28 +24,24 @@ namespace LikeLoL04
             view.UpdateCurrent(storeItemData);
 
             string beSelectItemName = storeItemData.itemName;
-            StoreCraftingData storeCraftingModelData = model.GetCraftingDataByName(beSelectItemName);
-            if (storeCraftingModelData != null)
+            StoreCraftingData storeCraftingData = model.GetCraftingDataByName(beSelectItemName);
+            if (storeCraftingData != null)
             {
-                List<StoreItemData> parents = new List<StoreItemData>();
-                foreach (var parentName in storeCraftingModelData.Parents)
-                {
-                    StoreItemData parentItem = StoreSystemController.Instance.GetItemByName(parentName);
-                    if (parentItem != null)
-                    {
-                        parents.Add(parentItem);
-                    }
-                }
-                view.UpdateParents(parents);
+                List<StoreItemData> parentStoreItemDatas = GetParentStoreItemDatas(storeCraftingData.Parents);
+                view.UpdateParents(parentStoreItemDatas);
+
                 // 第一层 Children
-                var layer1Children = new List<StoreItemData>();
-                var layer2Children = new List<StoreItemData>();
-                foreach (var childName in storeCraftingModelData.Children)
+                var layer1DataList = new List<StoreItemData>();
+                var layer2DataList = new List<StoreItemData>();
+                Dictionary<int, List<StoreItemData>> layer2DataDict = new Dictionary<int, List<StoreItemData>>();
+
+                for (int i = 0; i < storeCraftingData.Children.Count; i++)
                 {
+                    string childName = storeCraftingData.Children[i];
                     StoreItemData childItem = StoreSystemController.Instance.GetItemByName(childName);
                     if (childItem != null)
                     {
-                        layer1Children.Add(childItem);
+                        layer1DataList.Add(childItem);
                         // 查找该 child 的 crafting 数据，收集第二层（即孙辈）
                         var childCraft = model.GetCraftingDataByName(childName);
                         if (childCraft != null && childCraft.Children != null)
@@ -55,19 +51,43 @@ namespace LikeLoL04
                                 var grandItem = StoreSystemController.Instance.GetItemByName(grand);
                                 if (grandItem != null)
                                 {
-                                    layer2Children.Add(grandItem);
+                                    layer2DataList.Add(grandItem);
+                                    if (!layer2DataDict.ContainsKey(i))
+                                    {
+                                        layer2DataDict[i] = new List<StoreItemData>();
+                                    }
+                                    layer2DataDict[i].Add(grandItem);
                                 }
                             }
                         }
                     }
                 }
-                view.MultiLayerUpdateChildren(layer1Children, layer2Children);
+
+                // view.MultiLayerUpdateChildren(layer1DataList, layer2DataList);
+                List<float> layer1ItemPosX = view.UpdateChildRow1(layer1DataList);
+                view.UpdateChildRow2(layer2DataDict, layer1ItemPosX);
             }
             else
             {
                 view.UpdateParents(null);
-                view.MultiLayerUpdateChildren(null, null);
+                // view.MultiLayerUpdateChildren(null, null);
+                view.UpdateChildRow1(null);
+                view.UpdateChildRow2(null, null);
             }
+        }
+
+        private List<StoreItemData> GetParentStoreItemDatas(List<string> parentNames)
+        {
+            List<StoreItemData> parentStoreItemDatas = new List<StoreItemData>();
+            foreach (var parentName in parentNames)
+            {
+            StoreItemData parentItem = StoreSystemController.Instance.GetItemByName(parentName);
+                if (parentItem != null)
+                {
+                    parentStoreItemDatas.Add(parentItem);
+                }
+            }
+            return parentStoreItemDatas;
         }
     }
 }
