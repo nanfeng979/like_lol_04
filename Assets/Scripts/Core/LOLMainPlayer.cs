@@ -5,7 +5,7 @@ using XLua;
 
 namespace LikeLoL04
 {
-    public class LOLMainPlayer : MonoBehaviour
+    public class LOLMainPlayer : Singleton<LOLMainPlayer>
     {
 
         public LOLGameObject mainPlayer;
@@ -62,6 +62,9 @@ namespace LikeLoL04
 
             return list;
         }
+
+        private int m_gold = 500;
+        public int Gold { get => m_gold; set => m_gold = value; }
 
     }
 }
