@@ -27,7 +27,7 @@ namespace LikeLoL04
 
         void Update()
         {
-            HandleCursor();
+            // HandleCursor();
         }
 
         private void HandleCursor()
