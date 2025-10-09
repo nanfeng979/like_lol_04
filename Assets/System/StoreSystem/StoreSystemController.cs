@@ -15,6 +15,7 @@ namespace LikeLoL04
         void Start()
         {
             LOLClientKeyEventManager.Instance.OnToggleStoreSystemShow += ToggleShow;
+            LOLClientKeyEventManager.Instance.OnToggleStoreSystemShow += ToggleShowCraftingView;
 
             // 加载数据，初始化视图
             JsonUtils.LoadJson<List<StoreCategoryModel>>("Assets/System/StoreSystem/StoreCategoryJson.json", categories =>
@@ -24,9 +25,20 @@ namespace LikeLoL04
             });
         }
 
+        void OnDestroy()
+        {
+            LOLClientKeyEventManager.Instance.OnToggleStoreSystemShow -= ToggleShow;
+            LOLClientKeyEventManager.Instance.OnToggleStoreSystemShow -= ToggleShowCraftingView;
+        }
+
         public StoreItemData GetItemByName(string itemName)
         {
             return model.GetItemByName(itemName);
+        }
+
+        private void ToggleShowCraftingView()
+        {
+            StoreCraftingController.Instance.ToggleShow();
         }
     }
 }
