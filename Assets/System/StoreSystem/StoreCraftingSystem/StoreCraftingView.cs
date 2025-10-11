@@ -36,7 +36,7 @@ namespace LikeLoL04
         {
             StoreItemView currentView = beSelectStoreItem.GetComponent<StoreItemView>();
             currentView.SetItem(current);
-            currentView.ShowLightEffect(current.price <= LOLMainPlayer.Instance.Gold);
+            currentView.ShowLightEffect(current.Cost <= LOLMainPlayer.Instance.Gold);
         }
 
         public void UpdateParents(List<StoreItemData> parents)

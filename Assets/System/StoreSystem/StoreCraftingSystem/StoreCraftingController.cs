@@ -23,7 +23,7 @@ namespace LikeLoL04
         {
             view.UpdateCurrent(storeItemData);
 
-            string beSelectItemName = storeItemData.itemName;
+            string beSelectItemName = storeItemData.Name;
             StoreCraftingData storeCraftingData = model.GetCraftingDataByName(beSelectItemName);
             if (storeCraftingData != null)
             {

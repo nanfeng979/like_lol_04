@@ -18,10 +18,10 @@ namespace LikeLoL04
             LOLClientKeyEventManager.Instance.OnToggleStoreSystemShow += ToggleShowCraftingView;
 
             // 加载数据，初始化视图
-            JsonUtils.LoadJson<List<StoreCategoryModel>>("Assets/System/StoreSystem/StoreCategoryJson.json", categories =>
+            JsonUtils.LoadJson<List<StoreItemData>>("Assets/System/StoreSystem/StoreCategoryJson.json", storeItemDatas =>
             {
-                model.Categories = categories;
-                view.InitializeCategories(categories);
+                model.StoreItemDatas = storeItemDatas;
+                view.InitializeCategories(model.CategoryDict);
             });
         }
 

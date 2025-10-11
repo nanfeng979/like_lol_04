@@ -23,12 +23,12 @@ namespace LikeLoL04
         {
             m_itemRoot.GetChild(0).gameObject.SetActive(false);
 
-            foreach (var item in items)
+            foreach (StoreItemData  item in items)
             {
                 GameObject itemGO = Instantiate(m_itemRoot.GetChild(0).gameObject);
                 itemGO.SetActive(true);
                 itemGO.transform.SetParent(m_itemRoot);
-                itemGO.name = item.itemName;
+                itemGO.name = item.Name;
                 StoreItemView itemView = itemGO.GetComponent<StoreItemView>();
                 itemView.OnLeftClickAction = () =>
                 {

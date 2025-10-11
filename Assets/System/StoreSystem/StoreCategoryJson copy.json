@@ -1,0 +1,45 @@
+[
+  {
+    "title": "初始",
+    "itemList": [
+      { "itemName": "DarkSeal", "iconAddress": "Assets/LOLItems/Initial", "price": 350 },
+      { "itemName": "TearOfTheGoddess", "iconAddress": "Assets/LOLItems/Initial", "price": 400 },
+      { "itemName": "DoranRing", "iconAddress": "Assets/LOLItems/Initial", "price": 400 },
+      { "itemName": "DoranBlade", "iconAddress": "Assets/LOLItems/Initial", "price": 450 },
+      { "itemName": "TheExtract", "iconAddress": "Assets/LOLItems/Initial", "price": 450 },
+      { "itemName": "DoranShield", "iconAddress": "Assets/LOLItems/Initial", "price": 450 }
+    ]
+  },
+  {
+    "title": "基础",
+    "itemList": [
+      { "itemName": "FaerieCharm", "iconAddress": "Assets/LOLItems/basic", "price": 200 },
+      { "itemName": "Dagger", "iconAddress": "Assets/LOLItems/basic", "price": 250 },
+      { "itemName": "LuminaryVeil", "iconAddress": "Assets/LOLItems/basic", "price": 250 },
+      { "itemName": "SapphireCrystal", "iconAddress": "Assets/LOLItems/basic", "price": 300 },
+      { "itemName": "ClothArmor", "iconAddress": "Assets/LOLItems/basic", "price": 300 },
+      { "itemName": "HealthPotion", "iconAddress": "Assets/LOLItems/basic", "price": 300 },
+      { "itemName": "LongSword", "iconAddress": "Assets/LOLItems/basic", "price": 350 },
+      { "itemName": "AmplifyingTome", "iconAddress": "Assets/LOLItems/basic", "price": 400 },
+      { "itemName": "MagicMantle", "iconAddress": "Assets/LOLItems/basic", "price": 400 },
+      { "itemName": "RubyCrystal", "iconAddress": "Assets/LOLItems/basic", "price": 400 },
+      { "itemName": "CloakOfAgility", "iconAddress": "Assets/LOLItems/basic", "price": 600 },
+      { "itemName": "BlastingWand", "iconAddress": "Assets/LOLItems/basic", "price": 850 },
+      { "itemName": "Pickaxe", "iconAddress": "Assets/LOLItems/basic", "price": 850 },
+      { "itemName": "NeedlesslyLargeRod", "iconAddress": "Assets/LOLItems/basic", "price": 1200 },
+      { "itemName": "BFSword", "iconAddress": "Assets/LOLItems/basic", "price": 1300 }
+    ]
+  },
+  {
+    "title": "史诗",
+    "itemList": [
+      { "itemName": "Zeal", "iconAddress": "Assets/LOLItems/epic", "price": 200 }
+    ]
+  },
+  {
+    "title": "传说",
+    "itemList": [
+      { "itemName": "PhantomDancer", "iconAddress": "Assets/LOLItems/legend", "price": 200 }
+    ]
+  }
+]

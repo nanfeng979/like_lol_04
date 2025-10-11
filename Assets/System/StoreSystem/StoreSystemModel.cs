@@ -4,40 +4,41 @@ using UnityEngine;
 
 public class StoreSystemModel : IMVC_Model
 {
-    private List<StoreCategoryModel> m_categories = new List<StoreCategoryModel>();
-    public List<StoreCategoryModel> Categories
+    private List<StoreItemData> m_storeItemDatas = new List<StoreItemData>();
+
+    public List<StoreItemData> StoreItemDatas
     {
-        get { return m_categories; }
+        get { return m_storeItemDatas; }
         set
         {
-            m_categories = value;
-            ListToDict();
+            m_storeItemDatas = value;
+            m_categoryDict.Clear();
         }
     }
 
-    private Dictionary<string, StoreItemData> m_itemDict = new Dictionary<string, StoreItemData>();
+    private Dictionary<string, List<StoreItemData>> m_categoryDict = new Dictionary<string, List<StoreItemData>>();
 
-    private void ListToDict()
+    public Dictionary<string, List<StoreItemData>> CategoryDict
     {
-        m_itemDict.Clear();
-        foreach (var category in Categories)
+        get
         {
-            foreach (var item in category.itemList)
+            if (m_categoryDict.Count == 0)
             {
-                if (!m_itemDict.ContainsKey(item.itemName))
+                foreach (StoreItemData item in m_storeItemDatas)
                 {
-                    m_itemDict[item.itemName] = item;
+                    if (!m_categoryDict.ContainsKey(item.Category))
+                    {
+                        m_categoryDict[item.Category] = new List<StoreItemData>();
+                    }
+                    m_categoryDict[item.Category].Add(item);
                 }
             }
+            return m_categoryDict;
         }
     }
 
-    public StoreItemData GetItemByName(string name)
+    public StoreItemData GetItemByName(string itemName)
     {
-        if (m_itemDict.TryGetValue(name, out StoreItemData item))
-        {
-            return item;
-        }
-        return null;
+        return m_storeItemDatas.Find(item => item.Name == itemName);
     }
 }

@@ -16,17 +16,21 @@ namespace LikeLoL04
         private Image m_icon => transform.Find("Icon").GetComponent<Image>();
         private Text m_priceText => transform.Find("Price").GetComponent<Text>();
 
+        private Image m_lightEffect => transform.Find("LightEffect")?.GetComponent<Image>();
+        private string m_shineAddress = "Assets/System/StoreSystem/Texture/shine.png";
+        private string m_noShineAddress = "Assets/System/StoreSystem/Texture/noShine.png";
+
         public Action OnLeftClickAction { get; set; }
 
         public void SetItem(StoreItemData storeItemData)
         {
             SetIconByAddress(storeItemData);
-            SetPrice(storeItemData.price);
+            SetPrice(storeItemData.Cost);
         }
 
         public void SetIconByAddress(StoreItemData storeItemData)
         {
-            string iconAddress = storeItemData.iconAddress + "/" + storeItemData.itemName + ".png";
+            string iconAddress = "Assets/LOLItems/" + storeItemData.Name + ".png";
             AddressablesUtils.LoadAsset<Sprite>(iconAddress, sprite =>
             {
                 m_icon.sprite = sprite;
@@ -46,6 +50,27 @@ namespace LikeLoL04
         public void leftClickExecute()
         {
             OnLeftClickAction?.Invoke();
+        }
+
+        public void ShowLightEffect(bool show)
+        {
+            if (m_lightEffect != null)
+            {
+                if (show)
+                {
+                    AddressablesUtils.LoadAsset<Sprite>(m_shineAddress, sprite =>
+                    {
+                        m_lightEffect.sprite = sprite;
+                    });
+                }
+                else
+                {
+                    AddressablesUtils.LoadAsset<Sprite>(m_noShineAddress, sprite =>
+                    {
+                        m_lightEffect.sprite = sprite;
+                    });
+                }
+            }
         }
     }
 }
