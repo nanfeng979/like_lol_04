@@ -14,6 +14,8 @@ namespace LikeLoL04
 
         void Start()
         {
+            Hide();
+
             LOLClientKeyEventManager.Instance.OnToggleStoreSystemShow += ToggleShow;
             LOLClientKeyEventManager.Instance.OnToggleStoreSystemShow += ToggleShowCraftingView;
 
@@ -39,6 +41,12 @@ namespace LikeLoL04
         private void ToggleShowCraftingView()
         {
             StoreCraftingController.Instance.ToggleShow();
+        }
+
+        public override void Hide()
+        {
+            base.Hide();
+            StoreCraftingController.Instance.Hide();
         }
     }
 }

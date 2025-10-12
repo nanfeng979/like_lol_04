@@ -23,7 +23,7 @@ public abstract class MVC_Controller<TController, TView, TModel>
 
     public virtual void Hide()
     {
-        // view.Hide();
+        view.Hide();
     }
 
     protected virtual bool ViewDefaultActive => true;
