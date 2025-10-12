@@ -17,10 +17,9 @@ namespace LikeLoL04
 
         public void InitializeCategories(Dictionary<string, List<StoreItemData>> categories)
         {
-            // Sort categories: "Initial" first, then "legend", then others alphabetically
             var sortedCategories = new List<KeyValuePair<string, List<StoreItemData>>>();
 
-            List<string> priorityOrder = new List<string> { "Initial", "Legend" };
+            List<string> priorityOrder = new List<string> { "Initial", "Epic", "Legend" };
             foreach (var category in priorityOrder)
             {
                 if (categories.ContainsKey(category))
@@ -45,6 +44,7 @@ namespace LikeLoL04
             return category switch
             {
                 "Initial" => "初始",
+                "Epic" => "史诗",
                 "Legend" => "传说",
                 _ => category
             };

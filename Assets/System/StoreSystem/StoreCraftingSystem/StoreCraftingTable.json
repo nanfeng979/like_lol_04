@@ -1,37 +1,52 @@
 [
   {
-    "Name": "Dagger",
-    "Parents": ["Zeal", "PhantomDancer"],
-    "Children": []
-  },
-  {
-    "Name": "Zeal",
-    "Parents": ["PhantomDancer"],
-    "Children": ["Dagger"]
-  },
-  {
-    "Name": "PhantomDancer",
+    "Name": "Infinity Edge",
     "Parents": [],
-    "Children": ["Dagger", "Zeal", "Dagger"]
+    "Children": ["Cloak of Agility", "Pickaxe", "B. F. Sword"]
   },
   {
-    "Name": "InfinityEdge",
-    "Parents": [],
-    "Children": ["CloakOfAgility", "Pickaxe", "BFSword"]
-  },
-  {
-    "Name": "CloakOfAgility",
-    "Parents": ["InfinityEdge"],
+    "Name": "Cloak of Agility",
+    "Parents": ["Infinity Edge"],
     "Children": []
   },
   {
     "Name": "Pickaxe",
-    "Parents": ["InfinityEdge"],
+    "Parents": ["Infinity Edge"],
     "Children": []
   },
   {
-    "Name": "BFSword",
-    "Parents": ["InfinityEdge"],
+    "Name": "B. F. Sword",
+    "Parents": ["Infinity Edge"],
+    "Children": []
+  },
+  {
+    "Name": "Frozen Heart",
+    "Parents": [],
+    "Children": ["Warden's Mail", "Glacial Buckler"]
+  },
+  {
+    "Name": "Warden's Mail",
+    "Parents": ["Frozen Heart"],
+    "Children": ["Cloth Armor", "Cloth Armor"]
+  },
+  {
+    "Name": "Glacial Buckler",
+    "Parents": ["Frozen Heart"],
+    "Children": ["Cloth Armor", "Sapphire Crystal", "Glowing Mote"]
+  },
+  {
+    "Name": "Cloth Armor",
+    "Parents": ["Warden's Mail", "Glacial Buckler"],
+    "Children": []
+  },
+  {
+    "Name": "Sapphire Crystal",
+    "Parents": ["Glacial Buckler"],
+    "Children": []
+  },
+  {
+    "Name": "Glowing Mote",
+    "Parents": ["Glacial Buckler"],
     "Children": []
   }
 ]

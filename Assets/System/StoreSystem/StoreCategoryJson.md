@@ -1,6 +1,8 @@
 InfinityEdge: 无尽之刃
 
 Legend: 传说
+Epic: 史诗
+Initial: 初始
 
 AttackDamage: 攻击力
 CriticalStrikeChance: 暴击率

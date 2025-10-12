@@ -1,6 +1,6 @@
 [
   {
-    "Name": "InfinityEdge",
+    "Name": "Infinity Edge",
     "Category": "Legend",
     "Cost": 3450,
     "Attribute": {
@@ -12,7 +12,7 @@
     "Filter2": ["Marksman"]
   },
   {
-    "Name": "CloakOfAgility",
+    "Name": "Cloak of Agility",
     "Category": "Initial",
     "Cost": 600,
     "Attribute": {
@@ -32,7 +32,7 @@
     "Filter2": ["Fighter", "Marksman", "Assassin"]
   },
   {
-    "Name": "BFSword",
+    "Name": "B. F. Sword",
     "Category": "Initial",
     "Cost": 1300,
     "Attribute": {
@@ -40,5 +40,65 @@
     },
     "Filter1": ["Attack"],
     "Filter2": ["Fighter", "Marksman", "Assassin"]
+  },
+  {
+    "Name": "Frozen Heart",
+    "Category": "Legend",
+    "Cost": 2500,
+    "Attribute": {
+
+    },
+    "Filter1": [],
+    "Filter2": []
+  },
+  {
+    "Name": "Warden's Mail",
+    "Category": "Epic",
+    "Cost": 1000,
+    "Attribute": {
+      
+    },
+    "Filter1": [],
+    "Filter2": []
+  },
+  {
+    "Name": "Glacial Buckler",
+    "Category": "Epic",
+    "Cost": 900,
+    "Attribute": {
+      
+    },
+    "Filter1": [],
+    "Filter2": []
+  },
+  {
+    "Name": "Glowing Mote",
+    "Category": "Initial",
+    "Cost": 250,
+    "Attribute": {
+      
+    },
+    "Filter1": [],
+    "Filter2": []
+  },
+  {
+    "Name": "Cloth Armor",
+    "Category": "Initial",
+    "Cost": 300,
+    "Attribute": {
+      
+    },
+    "Filter1": [],
+    "Filter2": []
+  },
+  {
+    "Name": "Sapphire Crystal",
+    "Category": "Initial",
+    "Cost": 300,
+    "Attribute": {
+      
+    },
+    "Filter1": [],
+    "Filter2": []
   }
 ]
