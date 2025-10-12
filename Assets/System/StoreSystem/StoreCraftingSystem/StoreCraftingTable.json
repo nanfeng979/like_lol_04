@@ -13,5 +13,25 @@
     "Name": "PhantomDancer",
     "Parents": [],
     "Children": ["Dagger", "Zeal", "Dagger"]
+  },
+  {
+    "Name": "InfinityEdge",
+    "Parents": [],
+    "Children": ["CloakOfAgility", "Pickaxe", "BFSword"]
+  },
+  {
+    "Name": "CloakOfAgility",
+    "Parents": ["InfinityEdge"],
+    "Children": []
+  },
+  {
+    "Name": "Pickaxe",
+    "Parents": ["InfinityEdge"],
+    "Children": []
+  },
+  {
+    "Name": "BFSword",
+    "Parents": ["InfinityEdge"],
+    "Children": []
   }
 ]
