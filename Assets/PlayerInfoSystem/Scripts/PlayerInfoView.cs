@@ -52,32 +52,6 @@ namespace LikeLoL04
             // currentHpBarImage.fillAmount = (float)currentHp / (float)maxHp;
         }
 
-        public Image Speell1Image;
-        public Image Speell2Image;
-        public Image Speell3Image;
-        public Image Speell4Image;
-
-        public void OnUpgradeSkill(int skillIndex, int skillLevel)
-        {
-            switch (skillIndex)
-            {
-                case 1:
-                    Speell1Image.enabled = false;
-                    break;
-                case 2:
-                    Speell2Image.enabled = false;
-                    break;
-                case 3:
-                    Speell3Image.enabled = false;
-                    break;
-                case 4:
-                    Speell4Image.enabled = false;
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public Text AttackText;
         public Text MagicText;
         public Text ArmorText;

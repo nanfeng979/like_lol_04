@@ -11,7 +11,7 @@ public class MainPlayerSkillSystem : MonoBehaviour
 
     public LOLHeroGameObject mainPlayer;
 
-    public event Action<int, int> OnUpgradeSkill;
+    public event Action<int> OnUpgradeSkill;
 
     void Awake()
     {
@@ -57,24 +57,6 @@ public class MainPlayerSkillSystem : MonoBehaviour
 
     private void HandleShiftSkillKey(int slot)
     {
-        switch (slot)
-        {
-            case 1:
-                mainPlayer.Skill.UpgradeSkill(1);
-                OnUpgradeSkill?.Invoke(1, mainPlayer.Skill.Skill1Level);
-                break;
-            case 2:
-                mainPlayer.Skill.UpgradeSkill(2);
-                OnUpgradeSkill?.Invoke(2, mainPlayer.Skill.Skill2Level);
-                break;
-            case 3:
-                mainPlayer.Skill.UpgradeSkill(3);
-                OnUpgradeSkill?.Invoke(3, mainPlayer.Skill.Skill3Level);
-                break;
-            case 4:
-                mainPlayer.Skill.UpgradeSkill(4);
-                OnUpgradeSkill?.Invoke(4, mainPlayer.Skill.Skill4Level);
-                break;
-        }
+        OnUpgradeSkill?.Invoke(slot);
     }
 }

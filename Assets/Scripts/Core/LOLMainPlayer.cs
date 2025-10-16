@@ -66,6 +66,36 @@ namespace LikeLoL04
         private int m_gold = 500;
         public int Gold { get => m_gold; set => m_gold = value; }
 
+        private int m_level = 1;
+        public int Level { get => m_level; set => m_level = value; }
+        private int m_maxLevel = 18;
+        public int MaxLevel { get => m_maxLevel; set => m_maxLevel = value; }
+
+        // 可以升级技能的点数
+        private int m_skillUpgradePoint = 1;
+        public int SkillUpgradePoint { get => m_skillUpgradePoint; set => m_skillUpgradePoint = value; }
+
+        public void OnUpgradeSkill()
+        {
+            if (Level < MaxLevel)
+            {
+                Level++;
+                SkillUpgradePoint++;
+            }
+        }
+
+        public bool CanUpgradeSkill()
+        {
+            return SkillUpgradePoint > 0;
+        }
+
+        public void UpgradeSkill()
+        {
+            if (CanUpgradeSkill())
+            {
+                SkillUpgradePoint--;
+            }
+        }
     }
 }
 

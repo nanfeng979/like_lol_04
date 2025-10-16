@@ -1,4 +1,5 @@
 using System;
+using LikeLoL04;
 using UnityEngine;
 
 /// <summary>
@@ -44,6 +45,7 @@ public class LOLClientKeyEventManager : MonoBehaviour
         HandleToggleAttributeViewShow();
         HandleToggleBagSystemShow();
         HandleToggleStoreSystemShow();
+        HandleTestAddLevel();
     }
 
     private void HandleKeyDetection()
@@ -97,6 +99,14 @@ public class LOLClientKeyEventManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             OnToggleStoreSystemShow?.Invoke();
+        }
+    }
+
+    private void HandleTestAddLevel()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            LOLMainPlayer.Instance.OnUpgradeSkill();
         }
     }
 }
