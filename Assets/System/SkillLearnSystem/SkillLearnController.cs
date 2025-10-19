@@ -9,6 +9,8 @@ namespace LikeLoL04
     public class SkillLearnController
         : MVC_Controller<SkillLearnController, SkillLearnView, SkillLearnModel>
     {
+        public string m_skillLevelEnableAddress = "Assets/PlayerInfoSystem/UI/技能激活圆.png";
+
         // protected override bool ViewDefaultActive => false;
 
         void Start()
@@ -28,12 +30,15 @@ namespace LikeLoL04
             if (CanUpgradeSkill(skillType))
             {
                 Debug.Log($"Upgrade skill {skillType} to level");
-                int currentLevel = model.MainPlayerSkill.UpgradeSkill(skillType, 1);
+                int currentLevel = model.UpgradeSkill(skillType, 1);
                 if (currentLevel != -1)
                 {
                     LOLMainPlayer.Instance.UpgradeSkill();
                     Debug.Log($"Upgrade skill {skillType} to level {currentLevel}");
-                    view?.OnUpgradeSkill(skillType, currentLevel);
+                    AddressablesUtils.LoadAsset<Sprite>(m_skillLevelEnableAddress, sprite =>
+                    {
+                        view.OnUpgradeSkill(skillType, currentLevel, sprite);
+                    });
                 }
                 else
                 {
@@ -44,15 +49,15 @@ namespace LikeLoL04
 
         private bool CanUpgradeSkill(int skillType)
         {
-            if (!LOLMainPlayer.Instance.CanUpgradeSkill())
+            if (!model.CanUpgradeSkill)
             {
                 Debug.LogWarning($"Player level is not high enough to upgrade skill {skillType}");
                 return false;
             }
 
-            int currentLevel = model.MainPlayerSkill.GetSkillLevel(skillType);
-            int maxLevel = model.MainPlayerSkill.GetSkillMaxLevel(skillType);
-            int playerLevel = LOLMainPlayer.Instance.Level;
+            int currentLevel = model.GetSkillLevel(skillType);
+            int maxLevel = model.GetSkillMaxLevel(skillType);
+            int playerLevel = model.PlayerLevel;
 
             // 根据玩家等级获取该阶段的技能可升级上限
             int levelLimit = GetSkillLevelLimitByPlayerLevel(playerLevel);
